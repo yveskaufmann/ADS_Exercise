@@ -1,0 +1,12 @@
+# Object files
+*.o
+
+
+# Build directories
+/Default
+
+# Executables
+*.exe
+
+# Docu
+/docu
