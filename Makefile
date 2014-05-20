@@ -41,8 +41,7 @@ clean:
 	rm -f $(TARGET)
 
 doc-clean:
-	rm -rf latex
-	rm -rf html
+	rm -rf docu 
 
 help:
 	@echo Targets
