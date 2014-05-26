@@ -3,14 +3,13 @@
 	Project: List
 	File: list.c
 	Purpose: 
-
 	@author fxdapokalypse
 	@version 1.0 09.04.2014
 */
 
 #include "list.h"
 
-List * List_create() {
+List *List_create() {
 	List *list = (List *) malloc(sizeof(List));
 	if(list == NULL) {
 		return 0;
@@ -107,7 +106,7 @@ Node *List_insertNodeAt(List *list, Node *newNode, Node *position, NodeInsertDir
 	return NULL;
 }
 
-Node* List_getNode(List *list, int index) {
+Node *List_getNode(List *list, int index) {
 
 	if(!list || !list->root || index < 0 || index >= list->elementCount) {
 		return NULL;
@@ -130,7 +129,7 @@ Node* List_getNode(List *list, int index) {
 	 */
 	Node *currentNode = NULL;
 	size_t offset = 0;
-	size_t piviot = (size_t)(list->elementCount / 2);
+	size_t piviot = (size_t) (list->elementCount / 2);
 
 	if(index < piviot) {
 		currentNode = list->root;
@@ -144,7 +143,7 @@ Node* List_getNode(List *list, int index) {
 	while(currentNode != NULL && --index >= 0) {
 		 // retrieve dynamicaly the pPrev or pNext field.
 		 // NOTE: A pointer to a structure act as pointer pointer.
-		currentNode = *(Node**)((char*)currentNode + offset);
+		currentNode = *(Node**) ((char*) currentNode + offset);
 	}
 	return index < 0 ? currentNode : NULL;
 
@@ -152,11 +151,14 @@ Node* List_getNode(List *list, int index) {
 
 void List_clear(List *list) {
 
-	if(!list || !list->root) {
+	if(!list) {
 		return;
 	}
-
-	List_deleteAllNodes(list);
+	
+	if(list->root) {
+		List_deleteAllNodes(list);
+	}
+	
 	free(list);
 }
 
@@ -179,8 +181,8 @@ void List_ForEach(List *list, NodeHandler nodeHandler) {
 	}
 }
 
-Node* List_detachNode(List *list, Node* node) {
-	if(!node || list->elementCount <= 0 || node->attachedList != list) {
+Node *List_detachNode(List *list, Node *node) {
+	if(!node || list->elementCount <= 0 ) {
 		return node;
 	}
 
@@ -212,7 +214,7 @@ Node* List_detachNode(List *list, Node* node) {
 	return node;
 }
 
-Node* List_detachNodeAtIndex(List *list, int index) {
+Node *List_detachNodeAtIndex(List *list, int index) {
 	Node *node = List_getNode(list, index);
 	return List_detachNode(list, node);
 }
@@ -247,5 +249,66 @@ void List_deleteAllNodes(List *list) {
 	List_ForEach(list, removeNode);
 }
 
+Node *List_findNode(List *list, NodeHandler filter) {
+	Node *ret = NULL;
+	
+	NodeHandlerReturnValue filterNode(Node *node, size_t index) {
+		if(filter(node, index)) {
+			ret = node;
+			return ABORT;
+		}
+		return CONTINUE;
+	}
+	
+	List_ForEach(list, filterNode);
+		
+	return ret;
+}
 
+List *List_findAllNodes(List *list, NodeHandler filter) {
+	List *filteredNodes = List_create();
+	
+	NodeHandlerReturnValue filterNodes(Node *node, size_t index) {
+		if(filter(node, index)) {
+			List_addLast(filteredNodes, node->data);
+		}
+		return CONTINUE;
+	}
+	
+	List_ForEach(list, filterNodes);
+
+	return filteredNodes;
+}
+
+void List_swapNodes(Node *firstNode, Node *secondNode) {
+	if(!firstNode || !secondNode || firstNode == secondNode) {
+		return;
+	}
+	
+	void *tmp = firstNode->data;
+	firstNode->data = secondNode->data;
+	secondNode->data = tmp;
+}
+
+void List_sort(List *list, NodeComperator nodeComperator) {
+	if(!list || !list->root || list->elementCount <= 1 ) {
+		return;
+	}
+
+	int countOfSwaps;
+	Node *currNode = NULL;
+	Node *lastNode = NULL;
+	
+	do {
+		countOfSwaps = 0;
+		for(currNode = list->root; currNode->pNext != lastNode; currNode = currNode->pNext) {
+			if( nodeComperator(currNode, currNode->pNext) > 0) {
+				List_swapNodes(currNode, currNode->pNext);
+				countOfSwaps++;
+			}
+		}
+		// notice the last node to be able to ignore the already sorted nodes
+		lastNode = currNode; 
+	} while(countOfSwaps > 0);
+}
 
