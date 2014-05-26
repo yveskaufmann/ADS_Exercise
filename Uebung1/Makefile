@@ -6,7 +6,7 @@
 # 
 
 CC=gcc
-OPTIONS=-g -Wall -std=c99 -pedantic -Winline -x c
+OPTIONS=-g -Wall -std=c99 -Winline -x c
 DEBUG_OPTIONS= -Oo -fno-inline
 TARGET=list
 

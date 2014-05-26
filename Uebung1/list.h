@@ -1,5 +1,6 @@
 /**
 	
+
 	Project: List
 	File: list.h
 	Purpose: 
@@ -54,7 +55,6 @@ struct List {
 	size_t elementCount;
 	NodeHandler onBeforeRemove;
 };
-
 
 /**
  * Just create and initialize root element of the list.
@@ -117,7 +117,7 @@ void List_addFirst(List *list, void *data);
  * @param index the specified index.
  * @return the address to the requested node if the node exists otherwise <code>null</code>
  */
-Node* List_getNode(List *list, int index);
+Node *List_getNode(List *list, int index);
 
 /**
  * Iterate through the specified list of nodes and call for each node the NodeHandler function.
@@ -133,7 +133,7 @@ void List_ForEach(List *list, NodeHandler nodeHandler);
  * @param node
  * @return
  */
-Node* List_detachNode(List *list, Node *node);
+Node *List_detachNode(List *list, Node *node);
 
 /**
  *
@@ -141,7 +141,7 @@ Node* List_detachNode(List *list, Node *node);
  * @param index
  * @return
  */
-Node* List_detachNodeAtIndex(List *list, int index);
+Node *List_detachNodeAtIndex(List *list, int index);
 
 
 /**
@@ -175,7 +175,7 @@ void List_deleteAllNodes(List *list);
  * @param filter
  * @return
  */
-Node* List_findNode(List *list, NodeHandler filter);
+Node *List_findNode(List *list, NodeHandler filter);
 
 /**
  *
@@ -183,6 +183,10 @@ Node* List_findNode(List *list, NodeHandler filter);
  * @param filter
  * @return
  */
-List* List_findAllNodes(List *list, NodeHandler filter);
+List *List_findAllNodes(List *list, NodeHandler filter);
+
+void List_swapNodes(Node *firstNode, Node *lastNode);
+
+void List_sort(List *list, NodeComperator nodeComperator);
 
 #endif /* LIST_H_ */
