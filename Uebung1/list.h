@@ -189,4 +189,5 @@ void List_swapNodes(Node *firstNode, Node *lastNode);
 
 void List_sort(List *list, NodeComperator nodeComperator);
 
+void List_mergeSort(List *list, NodeComperator nodeComperator); 
 #endif /* LIST_H_ */

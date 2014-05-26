@@ -312,3 +312,65 @@ void List_sort(List *list, NodeComperator nodeComperator) {
 	} while(countOfSwaps > 0);
 }
 
+void List_mergeSort(List *list, NodeComperator nodeComperator) {
+	if(!list || !list->root || list->elementCount <= 1 ) {
+		return;
+	}
+
+	List *merge(List *left, List* right) {
+		Node *node = NULL;
+		List *newList = List_create();
+		
+		while(left->root != NULL && right->root != NULL) {
+			
+			if(nodeComperator(left->root, right->root) <= 0) {
+				node = List_detachNode(left, left->root);	
+			} else {
+				node = List_detachNode(right, right->root);
+			}
+
+			List_insertNodeAt(newList, node, newList->head, AFTER);     
+		}
+
+		while(left->root != NULL) {
+			node = List_detachNode(left, left->root);	
+			List_insertNodeAt(newList, node, newList->head, AFTER);     
+		}
+				
+		while(right->root != NULL) {
+			node = List_detachNode(right, right->root);	
+			List_insertNodeAt(newList, node, newList->head, AFTER);     
+		}
+
+		List_clear(left);
+		List_clear(right);
+		return newList;
+	} 
+		
+	List *sort(List *_list) {
+		if(_list->elementCount <= 1) {  
+			return _list;
+		}
+		
+		int mid = (_list->elementCount / 2);
+		Node *midNode = List_getNode(_list, mid);
+		
+		List *left = List_create(); 
+		left->root =_list->root;
+		left->head = midNode->pPrev;
+		
+		List *right = List_create();
+		right->root = midNode;
+			
+		left->head->pNext = NULL;
+		left->elementCount = mid + 1;
+		right->root->pPrev = NULL;
+		right->elementCount = _list->elementCount - left->elementCount;
+	
+		left = sort(left);
+		right = sort(right);
+		return merge(left, right);
+	}
+
+	sort(list);
+}
