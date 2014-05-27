@@ -341,9 +341,6 @@ void List_mergeSort(List *list, NodeComperator nodeComperator) {
 			node = List_detachNode(right, right->root);	
 			List_insertNodeAt(newList, node, newList->head, AFTER);     
 		}
-
-		List_clear(left);
-		List_clear(right);
 		return newList;
 	} 
 		
@@ -355,22 +352,40 @@ void List_mergeSort(List *list, NodeComperator nodeComperator) {
 		int mid = (_list->elementCount / 2);
 		Node *midNode = List_getNode(_list, mid);
 		
-		List *left = List_create(); 
-		left->root =_list->root;
-		left->head = midNode->pPrev;
+		List left = {
+			.root =  _list->root,
+			.head = midNode->pPrev,
+			.elementCount = mid
+		};
+
+		List right = {
+			.root =  midNode,
+			.head = _list->head,
+			.elementCount = _list->elementCount - left.elementCount
+		};
 		
-		List *right = List_create();
-		right->root = midNode;
+
+		left.head->pNext = NULL;
+		right.root->pPrev = NULL;
+		
+		List *lSorted = sort(&left);
+		List *rSorted = sort(&right);
+		List *result = merge(lSorted, rSorted);
+		
+		if(lSorted != &left) {
+			free(lSorted);
+		}
 			
-		left->head->pNext = NULL;
-		left->elementCount = mid + 1;
-		right->root->pPrev = NULL;
-		right->elementCount = _list->elementCount - left->elementCount;
-	
-		left = sort(left);
-		right = sort(right);
-		return merge(left, right);
+		if(rSorted != &right) {
+			free(rSorted);
+		}
+
+		return result;
 	}
 
-	sort(list);
+	List *newList = sort(list);
+	list->root = newList->root;
+	list->head = newList->head;
+	list->elementCount = newList->elementCount;
+	free(newList);
 }
