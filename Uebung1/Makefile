@@ -10,6 +10,8 @@ OPTIONS=-g -Wall -std=c99 -Winline -x c
 DEBUG_OPTIONS= -Oo -fno-inline
 TARGET=list
 
+
+
 DOC=doxygen
 DOCCONFIG=doxygen.config
 
@@ -18,9 +20,11 @@ MEMCHECKPARAMETERS=--tool=memcheck
 
 TESTARGUMENTS=
 
+.c:
+	@echo $*
 
-all: *.c
-	$(CC) $(OPTIONS) main.c list.c -o $(TARGET) 
+$(TARGET): *.c
+	$(CC) $(OPTIONS) *.c -o $(TARGET) 
 
 doc:	*.c
 	$(DOC) $(DOCCONFIG) $(TARGET)
@@ -31,10 +35,7 @@ doc-gen-config-file:
 mem-check:
 	$(MEMCHECKPRGRAM) $(MEMCHECKPARAMETERS) ./$(TARGET) $(TESTARGUMENTS)
 
-format: *.c
-	$(FORMATPROGRAM) $(TARGET)
-
-run:
+run: $(TARGET)
 	./$(TARGET) $(TESTARGUMENTS)
 
 clean:
