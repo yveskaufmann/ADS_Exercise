@@ -12,13 +12,23 @@
 #include <stdio.h>
 #include <string.h>
 #include "list.h"
+#include "student.h"
 
 int main(int argc, char **argv) {
+
+	List *students = List_create();
+	students->onBeforeRemove = Student_NodeClearHandler;
+	List_addFirst(students, Student_create("Yves", "Kaufmann", "Angewandte Informatik", 544361));
+	List_addFirst(students, Student_create("Ksenia", "Majorova", "BWL", 544362));
+	Student_printAll(students);
+	List_clear(students);
+
+
 	int comperator(Node *firstNode, Node *secondNode) {
 		return strcmp((char*) firstNode->data, (char*) secondNode->data);
 	}
 
-	NodeHandlerReturnValue printNodes(Node *node, size_t index) {
+	NodeHandlerReturnValue printNodes(Node *node, size_t index, void *data) {
 		printf("%d - %s\n",(int) index + 1, (char*) node->data);
 		return CONTINUE;
 	}
@@ -53,11 +63,9 @@ int main(int argc, char **argv) {
 	List_addLast(list, (void*) "2");
 	List_addLast(list, (void*) "1");
 	
-	List_ForEach(list, printNodes);
-	printf("\n");
+	List_ForEach(list, printNodes, NULL); printf("\n");
 	List_mergeSort(list, comperator);
-	List_ForEach(list, printNodes);
-
+	List_ForEach(list, printNodes, NULL);
 	List_clear(list);
 	return 0;
 }

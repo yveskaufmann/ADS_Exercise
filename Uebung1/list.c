@@ -163,7 +163,7 @@ void List_clear(List *list) {
 }
 
 
-void List_ForEach(List *list, NodeHandler nodeHandler) {
+void List_ForEach(List *list, NodeHandler nodeHandler, void *data) {
 	if(!list || !list->root || list->elementCount == 0 || !nodeHandler) {
 		return;
 	}
@@ -173,7 +173,7 @@ void List_ForEach(List *list, NodeHandler nodeHandler) {
 	size_t index = 0;
 	while(NULL != currentNode) {
 		nextNode = currentNode->pNext;
-		if(nodeHandler(currentNode, index) == ABORT) {
+		if(nodeHandler(currentNode, index, data) == ABORT) {
 			break;
 		}
 		currentNode = nextNode;
@@ -227,7 +227,7 @@ int List_deleteNode(List *list, Node *node) {
 	}
 
 	if(list->onBeforeRemove != NULL) {
-		list->onBeforeRemove(node, 0);
+		list->onBeforeRemove(node, 0, NULL);
 	}
 
 	free(node);
@@ -242,40 +242,46 @@ int List_deleteNodeAtIndex(List *list, int index) {
 
 void List_deleteAllNodes(List *list) {
 
-	NodeHandlerReturnValue removeNode(Node *node, size_t index) {
+	NodeHandlerReturnValue removeNode(Node *node, size_t index, void *data) {
 		return List_deleteNode(list, node);
 	}
 
-	List_ForEach(list, removeNode);
+	List_ForEach(list, removeNode, NULL);
+
 }
 
-Node *List_findNode(List *list, NodeHandler filter) {
+int List_size(List *list) {
+	if(!list) return 0;
+	return list->elementCount;
+}
+
+Node *List_findNode(List *list, NodeHandler filter, void *data) {
 	Node *ret = NULL;
 	
-	NodeHandlerReturnValue filterNode(Node *node, size_t index) {
-		if(filter(node, index)) {
+	NodeHandlerReturnValue filterNode(Node *node, size_t index, void *data) {
+		if(filter(node, index, data)) {
 			ret = node;
 			return ABORT;
 		}
 		return CONTINUE;
 	}
 	
-	List_ForEach(list, filterNode);
+	List_ForEach(list, filterNode, data);
 		
 	return ret;
 }
 
-List *List_findAllNodes(List *list, NodeHandler filter) {
+List *List_findAllNodes(List *list, NodeHandler filter, void *data) {
 	List *filteredNodes = List_create();
 	
-	NodeHandlerReturnValue filterNodes(Node *node, size_t index) {
-		if(filter(node, index)) {
+	NodeHandlerReturnValue filterNodes(Node *node, size_t index, void *data) {
+		if(filter(node, index, data)) {
 			List_addLast(filteredNodes, node->data);
 		}
 		return CONTINUE;
 	}
 	
-	List_ForEach(list, filterNodes);
+	List_ForEach(list, filterNodes, data);
 
 	return filteredNodes;
 }

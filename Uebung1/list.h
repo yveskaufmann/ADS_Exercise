@@ -32,7 +32,7 @@ typedef enum {
 } NodeHandlerReturnValue;
 
 
-typedef NodeHandlerReturnValue (*NodeHandler) (Node *node, size_t index);
+typedef NodeHandlerReturnValue (*NodeHandler) (Node *node, size_t index, void *data);
 typedef int (*NodeComperator) (Node *prevNode, Node *nextNode);
 
 
@@ -125,7 +125,7 @@ Node *List_getNode(List *list, int index);
  * @param list the specified list.
  * @param nodeHandler the NodeHandler which should called for every node.
  */
-void List_ForEach(List *list, NodeHandler nodeHandler);
+void List_ForEach(List *list, NodeHandler nodeHandler, void *data);
 
 /**
  *
@@ -160,7 +160,6 @@ int List_deleteNode(List *list, Node *node);
  */
 int List_deleteNodeAtIndex(List *list, int index);
 
-
 /**
  *
  * @param list
@@ -172,10 +171,9 @@ void List_deleteAllNodes(List *list);
 /**
  *
  * @param list
- * @param filter
  * @return
  */
-Node *List_findNode(List *list, NodeHandler filter);
+int List_size(List *list);
 
 /**
  *
@@ -183,11 +181,20 @@ Node *List_findNode(List *list, NodeHandler filter);
  * @param filter
  * @return
  */
-List *List_findAllNodes(List *list, NodeHandler filter);
+Node *List_findNode(List *list, NodeHandler filter, void *data);
+
+/**
+ *
+ * @param list
+ * @param filter
+ * @return
+ */
+List *List_findAllNodes(List *list, NodeHandler filter, void *data);
 
 void List_swapNodes(Node *firstNode, Node *lastNode);
 
 void List_sort(List *list, NodeComperator nodeComperator);
 
 void List_mergeSort(List *list, NodeComperator nodeComperator); 
+
 #endif /* LIST_H_ */
