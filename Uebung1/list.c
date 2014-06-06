@@ -9,94 +9,89 @@
 
 #include "list.h"
 
-List *List_create() {
-	List *list = (List *) malloc(sizeof(List));
+/**
+ * Type definition for a list segment type
+ */
+struct List {
+	NodePtr root;
+	NodePtr head;
+	NodeHandler onBeforeRemove;
+	size_t elementCount;
+	bool isDoupleLinkedList;
+};
+
+
+List List_create() {
+	List list = (List) malloc(sizeof(List));
 	if(list == NULL) {
-		return 0;
+		return NULL;
 	}
 
 	list->elementCount = 0;
 	list->root = NULL;
 	list->head = NULL;
 	list->onBeforeRemove = NULL;
+	list->isDoupleLinkedList = true;
 
 	return list;
 }
 
-Node *List_createNode(List *list, void *data) {
-	Node *newNode = (Node*) malloc(sizeof(Node));
-	if(newNode == NULL) {
-		return NULL;
-	}
-	newNode->data = data;
-	newNode->pNext = NULL;
-	newNode->pPrev = NULL;
-	newNode->attachedList = list;
-
-	return newNode;
-}
-
-void List_addFirst(List *list, void *data) {
-	Node *newNode = List_createNode(list, data);
+void List_addFirst(List list, void *data) {
+	NodePtr newNode = Node_create(data, list->isDoupleLinkedList);
 	if(newNode == NULL) {
 		return;
 	}
 	List_insertNodeAt(list,newNode, list->root, BEFORE);
 }
 
-void List_addLast(List *list, void *data) {
-	Node *newNode = List_createNode(list, data);
+void List_addLast(List list, void *data) {
+	NodePtr newNode = Node_create(data, list->isDoupleLinkedList);
 	if(newNode == NULL) {
 		return;
 	}
 	List_insertNodeAt(list,newNode, list->head, AFTER);
 }
 
-Node *List_insertNodeAt(List *list, Node *newNode, Node *position, NodeInsertDirection dir) {
+NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInsertDirection dir) {
 
-	if(list == NULL || newNode == NULL ) {
-		return NULL;
-	}
-
-	if( newNode->attachedList != NULL && newNode->attachedList != list) { // is the specified node already attached to a list ?
+	if(list == NULL || newNode == NULL  ) {
 		return NULL;
 	}
 
 	// is the list empty ?
 	if(list->root == NULL) {
-		newNode->attachedList = list;
 		list->head = newNode;
 		list->root = newNode;
 		list->elementCount++;
 		return newNode;
 	}
 
-	if( position == NULL || position->attachedList != list) { // is the specified position node attached to this list ?
-		return NULL;
-	}
+	if(position == NULL) return NULL;
 
-	newNode->attachedList = list;
 	if(dir == AFTER) {
-		Node *oldNextNode = position->pNext;
-		position->pNext = newNode;
 
-		newNode->pPrev = position;
-		newNode->pNext = oldNextNode;
+		NodePtr oldNextNode = Node_getNext(position);
+		Node_setNext(position, newNode);
+
+		Node_setPrev(newNode, position);
+		Node_setNext(newNode, oldNextNode);
+
 		if(oldNextNode) {
-			oldNextNode->pPrev = newNode;
+			Node_setPrev(oldNextNode, newNode);
 		} else {
 			list->head = newNode;
 		}
 	}
 
 	if(dir == BEFORE) {
-		Node *oldPrevNode = position->pPrev;
-		position->pPrev = newNode;
+		NodePtr oldPrevNode = Node_getPrev(position);
+		Node_setPrev(position, newNode);
 
-		newNode->pPrev = oldPrevNode;
-		newNode->pNext = position;
+		Node_setPrev(newNode, oldPrevNode);
+		Node_setNext(newNode, position);
+
 		if(oldPrevNode) {
-			oldPrevNode->pNext = newNode;
+			Node_setNext(oldPrevNode, newNode);
 		} else {
 			list->root = newNode;
 		}
@@ -106,7 +101,7 @@ Node *List_insertNodeAt(List *list, Node *newNode, Node *position, NodeInsertDir
 	return NULL;
 }
 
-Node *List_getNode(List *list, int index) {
+NodePtr List_getNode(List list, int index) {
 
 	if(!list || !list->root || index < 0 || index >= list->elementCount) {
 		return NULL;
@@ -125,31 +120,30 @@ Node *List_getNode(List *list, int index) {
 	 * This linear search has a simple improvement if the requested
 	 * index lies in the left half of the list then the search
 	 * start from the start of the list otherwise the search start
-	 * from the end of the list. This results in O(n/2).
+	 * from the end of the list.
 	 */
-	Node *currentNode = NULL;
-	size_t offset = 0;
+	NodePtr currentNode = NULL;
+	NodePtr (*nodeRetriever) (NodePtr) = NULL;
 	size_t piviot = (size_t) (list->elementCount / 2);
 
 	if(index < piviot) {
 		currentNode = list->root;
-		offset = offsetof(Node, pNext);
+		nodeRetriever = Node_getNext;
 	} else {
 		currentNode = list->head;
-		offset = offsetof(Node, pPrev);
 		index = (list->elementCount - 1) - index;
+		nodeRetriever = Node_getPrev;
 	}
 
 	while(currentNode != NULL && --index >= 0) {
 		 // retrieve dynamicaly the pPrev or pNext field.
-		 // NOTE: A pointer to a structure act as pointer pointer.
-		currentNode = *(Node**) ((char*) currentNode + offset);
+		currentNode = nodeRetriever(currentNode);
 	}
 	return index < 0 ? currentNode : NULL;
 
 }
 
-void List_clear(List *list) {
+void List_clear(List list) {
 
 	if(!list) {
 		return;
@@ -163,17 +157,17 @@ void List_clear(List *list) {
 }
 
 
-void List_ForEach(List *list, NodeHandler nodeHandler, void *data) {
+void List_ForEach(List list, NodeHandler nodeHandler, void *data) {
 	if(!list || !list->root || list->elementCount == 0 || !nodeHandler) {
 		return;
 	}
 
-	Node *currentNode = list->root;
-	Node *nextNode = NULL;
+	NodePtr currentNode = list->root;
+	NodePtr nextNode = NULL;
 	size_t index = 0;
 	while(NULL != currentNode) {
-		nextNode = currentNode->pNext;
-		if(nodeHandler(currentNode, index, data) == ABORT) {
+		nextNode = Node_getNext(currentNode);
+		if(!nodeHandler(currentNode, index, data)) {
 			break;
 		}
 		currentNode = nextNode;
@@ -181,17 +175,16 @@ void List_ForEach(List *list, NodeHandler nodeHandler, void *data) {
 	}
 }
 
-Node *List_detachNode(List *list, Node *node) {
+NodePtr List_detachNode(List list, NodePtr node) {
 	if(!node || list->elementCount <= 0 ) {
 		return node;
 	}
 
-	Node *next = node->pNext;
-	Node *prev = node->pPrev;
-	node->pNext = NULL;
-	node->pPrev = NULL;
-	node->attachedList = NULL;
+	NodePtr next = Node_getNext(node);
+	NodePtr prev = Node_getPrev(node);
 
+	Node_setNext(node, NULL);
+	Node_setPrev(node, NULL);
 	list->elementCount--;
 
 	if(!next && !prev) { // is last node ?
@@ -200,85 +193,84 @@ Node *List_detachNode(List *list, Node *node) {
 	}
 	else if(!prev) { // is start node ?
 		list->root = next;
-		next->pPrev = NULL;
+		Node_setPrev(next, NULL);
 	}
 	else if(!next) { // is end node ?
 		list->head = prev;
-		prev->pNext = NULL;
+		Node_setNext(prev, NULL);
 	}
 	else { // is inside node ?
-		prev->pNext = next;
-		next->pPrev = prev;
+		Node_setNext(prev, next);
+		Node_setPrev(next, prev);
 	}
-
 	return node;
 }
 
-Node *List_detachNodeAtIndex(List *list, int index) {
-	Node *node = List_getNode(list, index);
+NodePtr List_detachNodeAtIndex(List list, int index) {
+	NodePtr node = List_getNode(list, index);
 	return List_detachNode(list, node);
 }
 
-int List_deleteNode(List *list, Node *node) {
+bool List_deleteNodeAtIndex(List list, int index) {
+	NodePtr node = List_getNode(list, index);
+	return List_deleteNode(list, node);
+}
+
+
+bool List_deleteNode(List list, NodePtr node) {
 	node = List_detachNode(list, node);
 
 	if(NULL == node) {
 		return false;
 	}
 
-	if(list->onBeforeRemove != NULL) {
-		list->onBeforeRemove(node, 0, NULL);
-	}
-
-	free(node);
+	Node_free(node, list->onBeforeRemove);
 
 	return true;
 }
 
-int List_deleteNodeAtIndex(List *list, int index) {
-	Node *node = List_getNode(list, index);
-	return List_deleteNode(list, node);
-}
 
-void List_deleteAllNodes(List *list) {
+bool List_deleteAllNodes(List list) {
 
-	NodeHandlerReturnValue removeNode(Node *node, size_t index, void *data) {
+	bool removeNode(NodePtr node, size_t index, void *data) {
 		return List_deleteNode(list, node);
 	}
 
 	List_ForEach(list, removeNode, NULL);
 
+	return true;
+
 }
 
-int List_size(List *list) {
+int List_size(List list) {
 	if(!list) return 0;
 	return list->elementCount;
 }
 
-Node *List_findNode(List *list, NodeHandler filter, void *data) {
-	Node *ret = NULL;
+NodePtr List_findNode(List list, NodeHandler filter, void *data) {
+	NodePtr desiredNode = NULL;
 	
-	NodeHandlerReturnValue filterNode(Node *node, size_t index, void *data) {
+	bool filterNode(NodePtr node, size_t index, void *data) {
 		if(filter(node, index, data)) {
-			ret = node;
-			return ABORT;
+			desiredNode = node;
+			return false;
 		}
-		return CONTINUE;
+		return true;
 	}
 	
 	List_ForEach(list, filterNode, data);
 		
-	return ret;
+	return desiredNode;
 }
 
-List *List_findAllNodes(List *list, NodeHandler filter, void *data) {
-	List *filteredNodes = List_create();
+List List_findAllNodes(List list, NodeHandler filter, void *data) {
+	List filteredNodes = List_create();
 	
-	NodeHandlerReturnValue filterNodes(Node *node, size_t index, void *data) {
+	bool filterNodes(NodePtr node, size_t index, void *data) {
 		if(filter(node, index, data)) {
-			List_addLast(filteredNodes, node->data);
+			List_addLast(filteredNodes, Node_getData(node));
 		}
-		return CONTINUE;
+		return true;
 	}
 	
 	List_ForEach(list, filterNodes, data);
@@ -286,30 +278,21 @@ List *List_findAllNodes(List *list, NodeHandler filter, void *data) {
 	return filteredNodes;
 }
 
-void List_swapNodes(Node *firstNode, Node *secondNode) {
-	if(!firstNode || !secondNode || firstNode == secondNode) {
-		return;
-	}
-	
-	void *tmp = firstNode->data;
-	firstNode->data = secondNode->data;
-	secondNode->data = tmp;
-}
-
-void List_sort(List *list, NodeComperator nodeComperator) {
+void List_sort(List list, NodeComperator nodeComperator) {
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
 
 	int countOfSwaps;
-	Node *currNode = NULL;
-	Node *lastNode = NULL;
+	NodePtr currNode = NULL;
+	NodePtr lastNode = NULL;
 	
 	do {
 		countOfSwaps = 0;
-		for(currNode = list->root; currNode->pNext != lastNode; currNode = currNode->pNext) {
-			if( nodeComperator(currNode, currNode->pNext) > 0) {
-				List_swapNodes(currNode, currNode->pNext);
+		for(currNode = list->root; Node_getNext(currNode) != lastNode; currNode = Node_getNext(currNode)) {
+			NodePtr nextNode = Node_getNext(currNode);
+			if( nodeComperator(currNode, nextNode) > 0) {
+				Node_swapNodes(currNode, nextNode);
 				countOfSwaps++;
 			}
 		}
@@ -318,14 +301,14 @@ void List_sort(List *list, NodeComperator nodeComperator) {
 	} while(countOfSwaps > 0);
 }
 
-void List_mergeSort(List *list, NodeComperator nodeComperator) {
+void List_mergeSort(List list, NodeComperator nodeComperator) {
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
 
-	List *merge(List *left, List* right) {
-		Node *node = NULL;
-		List *newList = List_create();
+	List merge(struct List *left, struct List *right) {
+		NodePtr node = NULL;
+		List newList = List_create();
 		
 		while(left->root != NULL && right->root != NULL) {
 			
@@ -350,29 +333,28 @@ void List_mergeSort(List *list, NodeComperator nodeComperator) {
 		return newList;
 	} 
 		
-	List *sort(List *_list) {
+	List sort(List _list) {
 		if(_list->elementCount <= 1) {  
 			return _list;
 		}
 		
 		int mid = (_list->elementCount / 2);
-		Node *midNode = List_getNode(_list, mid);
+		NodePtr midNode = List_getNode(_list, mid);
 		
-		List left = {
+		struct List left = {
 			.root =  _list->root,
-			.head = midNode->pPrev,
+			.head = Node_getPrev(midNode),
 			.elementCount = mid
 		};
 
-		List right = {
+		struct List right = {
 			.root =  midNode,
 			.head = _list->head,
 			.elementCount = _list->elementCount - left.elementCount
 		};
 		
-
-		left.head->pNext = NULL;
-		right.root->pPrev = NULL;
+		Node_setNext(left.head, NULL);
+		Node_setPrev(right.root, NULL);
 		
 		List *lSorted = sort(&left);
 		List *rSorted = sort(&right);
@@ -389,7 +371,7 @@ void List_mergeSort(List *list, NodeComperator nodeComperator) {
 		return result;
 	}
 
-	List *newList = sort(list);
+	List newList = sort(list);
 	list->root = newList->root;
 	list->head = newList->head;
 	list->elementCount = newList->elementCount;

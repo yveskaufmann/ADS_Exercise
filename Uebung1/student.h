@@ -28,11 +28,11 @@ struct Student {
 Student *Student_create(char *firstName, char *sureName, char *courseName, int matriculationNumber);
 
 void Student_clear(Student *student);
-NodeHandlerReturnValue Student_NodeClearHandler(Node *node, size_t index, void *data);
+bool Student_NodeClearHandler(NodePtr node, size_t index, void *data);
 
 void Student_print(Student *student);
-void Student_printNode(Node *node);
-void Student_printAll(List *students);
-Node *Student_find(List *students, );
+void Student_printNode(NodePtr node);
+void Student_printAll(List students);
+
 
 #endif /* _STUDENT_H_ */

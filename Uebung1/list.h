@@ -14,47 +14,17 @@
 
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdbool.h>
+#include "node.h"
 
-#define true  1
-#define false 0
 
-typedef struct Node Node;
-typedef struct List List;
+typedef struct List* List;
 
 typedef enum {
 	AFTER,
 	BEFORE
 } NodeInsertDirection;
 
-typedef enum {
-	CONTINUE = true,
-	ABORT = false
-} NodeHandlerReturnValue;
-
-
-typedef NodeHandlerReturnValue (*NodeHandler) (Node *node, size_t index, void *data);
-typedef int (*NodeComperator) (Node *prevNode, Node *nextNode);
-
-
-/**
- * Type definition for a list segment type
- */
-struct Node {
-	Node *pNext;
-	Node *pPrev;
-	List *attachedList;
-	void *data;
-};
-
-/**
- * Type definition for a list segment type
- */
-struct List {
-	Node *root;
-	Node *head;
-	size_t elementCount;
-	NodeHandler onBeforeRemove;
-};
 
 /**
  * Just create and initialize root element of the list.
@@ -62,27 +32,15 @@ struct List {
  *
  * @return Pointer to the allocated root List.
  */
-List *List_create();
+List List_create();
 
 /**
  * Deallocate each element of the list.
  *
  * @param *list the pointer to the list which should be cleared.
  */
-void List_clear(List *list);
+void List_clear(List list);
 
-/**
- * <p>
- * Allocate a new node with a specified pointer and
- * return the address of the create node.
- * <br>
- * </p>
- *
- * @param list the list pointer for which this node is created.
- * @param data the pointer for the data.
- * @return
- */
-Node *List_createNode(List *list, void *data);
 
 /**
  *
@@ -92,7 +50,7 @@ Node *List_createNode(List *list, void *data);
  * @param dir
  * @return
  */
-Node *List_insertNodeAt(List *list, Node *newNode, Node *position, NodeInsertDirection dir);
+NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInsertDirection dir);
 
 /**
  * Appends the specified node to the end of this list.
@@ -100,7 +58,7 @@ Node *List_insertNodeAt(List *list, Node *newNode, Node *position, NodeInsertDir
  * @param list The list which should expanded by the specified node.
  * @param data
  */
-void List_addLast(List *list, void *data);
+void List_addLast(List list, void *data);
 
 /**
  * Inserts the specified node at the beginning of this list.
@@ -108,7 +66,7 @@ void List_addLast(List *list, void *data);
  * @param list The list which should expanded by the specified node.
  * @param data
  */
-void List_addFirst(List *list, void *data);
+void List_addFirst(List list, void *data);
 
 /**
  * Retrieve the  node from a specified list node at a specified index.
@@ -117,7 +75,7 @@ void List_addFirst(List *list, void *data);
  * @param index the specified index.
  * @return the address to the requested node if the node exists otherwise <code>null</code>
  */
-Node *List_getNode(List *list, int index);
+NodePtr List_getNode(List list, int index);
 
 /**
  * Iterate through the specified list of nodes and call for each node the NodeHandler function.
@@ -125,7 +83,7 @@ Node *List_getNode(List *list, int index);
  * @param list the specified list.
  * @param nodeHandler the NodeHandler which should called for every node.
  */
-void List_ForEach(List *list, NodeHandler nodeHandler, void *data);
+void List_ForEach(List list, NodeHandler nodeHandler, void *data);
 
 /**
  *
@@ -133,7 +91,7 @@ void List_ForEach(List *list, NodeHandler nodeHandler, void *data);
  * @param node
  * @return
  */
-Node *List_detachNode(List *list, Node *node);
+NodePtr List_detachNode(List list, NodePtr node);
 
 /**
  *
@@ -141,7 +99,7 @@ Node *List_detachNode(List *list, Node *node);
  * @param index
  * @return
  */
-Node *List_detachNodeAtIndex(List *list, int index);
+NodePtr List_detachNodeAtIndex(List list, int index);
 
 
 /**
@@ -150,7 +108,7 @@ Node *List_detachNodeAtIndex(List *list, int index);
  * @param node
  * @return
  */
-int List_deleteNode(List *list, Node *node);
+bool List_deleteNode(List list, NodePtr node);
 
 /**
  *
@@ -158,7 +116,7 @@ int List_deleteNode(List *list, Node *node);
  * @param index
  * @return
  */
-int List_deleteNodeAtIndex(List *list, int index);
+bool List_deleteNodeAtIndex(List list, int index);
 
 /**
  *
@@ -166,22 +124,14 @@ int List_deleteNodeAtIndex(List *list, int index);
  * @param filter
  * @return
  */
-void List_deleteAllNodes(List *list);
+bool List_deleteAllNodes(List list);
 
 /**
  *
  * @param list
  * @return
  */
-int List_size(List *list);
-
-/**
- *
- * @param list
- * @param filter
- * @return
- */
-Node *List_findNode(List *list, NodeHandler filter, void *data);
+int List_size(List list);
 
 /**
  *
@@ -189,12 +139,19 @@ Node *List_findNode(List *list, NodeHandler filter, void *data);
  * @param filter
  * @return
  */
-List *List_findAllNodes(List *list, NodeHandler filter, void *data);
+NodePtr List_findNode(List list, NodeHandler filter, void *data);
 
-void List_swapNodes(Node *firstNode, Node *lastNode);
+/**
+ *
+ * @param list
+ * @param filter
+ * @return
+ */
+List List_findAllNodes(List list, NodeHandler filter, void *data);
 
-void List_sort(List *list, NodeComperator nodeComperator);
 
-void List_mergeSort(List *list, NodeComperator nodeComperator); 
+void List_sort(List list, NodeComperator nodeComperator);
+
+void List_mergeSort(List list, NodeComperator nodeComperator);
 
 #endif /* LIST_H_ */

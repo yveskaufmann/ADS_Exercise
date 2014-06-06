@@ -11,29 +11,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "list.h"
-#include "student.h"
+
 
 int main(int argc, char **argv) {
+	
 
-	List *students = List_create();
-	students->onBeforeRemove = Student_NodeClearHandler;
-	List_addFirst(students, Student_create("Yves", "Kaufmann", "Angewandte Informatik", 544361));
-	List_addFirst(students, Student_create("Ksenia", "Majorova", "BWL", 544362));
-	Student_printAll(students);
-	List_clear(students);
-
-
-	int comperator(Node *firstNode, Node *secondNode) {
-		return strcmp((char*) firstNode->data, (char*) secondNode->data);
+	int comperator(NodePtr firstNode, NodePtr secondNode) {
+		return strcmp((char*) Node_getData(firstNode), (char*) Node_getData(secondNode));
 	}
 
-	NodeHandlerReturnValue printNodes(Node *node, size_t index, void *data) {
-		printf("%d - %s\n",(int) index + 1, (char*) node->data);
-		return CONTINUE;
+	bool printNodes(NodePtr node, size_t index, void *data) {
+		printf("%d - %s\n",(int) index + 1, (char*) Node_getData(node));
+		return true;
 	}
 
-	List *list = List_create();
+	List list = List_create();
 
 	List_addLast(list, (void*) "4");
 	List_addLast(list, (void*) "2");
@@ -43,7 +37,7 @@ int main(int argc, char **argv) {
 	List_addLast(list, (void*) "7");
 	List_addLast(list, (void*) "2");
 	List_addLast(list, (void*) "1");
-		
+
 	List_addLast(list, (void*) "4");
 	List_addLast(list, (void*) "2");
 	List_addLast(list, (void*) "3");
@@ -52,8 +46,8 @@ int main(int argc, char **argv) {
 	List_addLast(list, (void*) "7");
 	List_addLast(list, (void*) "2");
 	List_addLast(list, (void*) "1");
-	
-	
+
+
 	List_addLast(list, (void*) "4");
 	List_addLast(list, (void*) "2");
 	List_addLast(list, (void*) "3");
@@ -62,13 +56,14 @@ int main(int argc, char **argv) {
 	List_addLast(list, (void*) "7");
 	List_addLast(list, (void*) "2");
 	List_addLast(list, (void*) "1");
-	
-	List_ForEach(list, printNodes, NULL); printf("\n");
-	List_mergeSort(list, comperator);
-	List_ForEach(list, printNodes, NULL);
-	List_clear(list);
+
+	// List_ForEach(list, printNodes, NULL); printf("\n");
+	// List_mergeSort(list, comperator);
+	// List_ForEach(list, printNodes, NULL);
+	// List_clear(list);
 	return 0;
 }
+
 
 
 

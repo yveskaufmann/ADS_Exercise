@@ -28,11 +28,11 @@ void Student_clear(Student *student) {
 	free(student);
 }
 
-NodeHandlerReturnValue Student_NodeClearHandler(Node *node, size_t index, void *data) {
+bool Student_NodeClearHandler(NodePtr node, size_t index, void *data) {
 	if(node) {
-		Student_clear(node->data);
+		Student_clear(Node_getData(node));
 	}
-	return CONTINUE;
+	return true;
 }
 
 void Student_print(Student *student) {
@@ -44,14 +44,14 @@ void Student_print(Student *student) {
 	printf("\n");
 
 }
-void Student_printNode(Node *node) {
+void Student_printNode(NodePtr node) {
 	if(!node) return;
-	Student_print(node->data);
+	Student_print(Node_getData(node));
 }
 
-void Student_printAll(List *studentList) {
+void Student_printAll(List studentList) {
 	if(!studentList) return;
 	List_ForEach(studentList, (NodeHandler) Student_printNode, NULL);
 }
 
-void Student_Search(List *studentList, )
+
