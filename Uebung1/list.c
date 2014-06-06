@@ -15,7 +15,7 @@
 struct List {
 	NodePtr root;
 	NodePtr head;
-	NodeHandler onBeforeRemove;
+	NodeHandler destroyDataHandler;
 	size_t elementCount;
 	bool isDoupleLinkedList;
 };
@@ -30,7 +30,7 @@ List List_create() {
 	list->elementCount = 0;
 	list->root = NULL;
 	list->head = NULL;
-	list->onBeforeRemove = NULL;
+	list->destroyDataHandler = NULL;
 	list->isDoupleLinkedList = true;
 
 	return list;
@@ -143,7 +143,7 @@ NodePtr List_getNode(List list, int index) {
 
 }
 
-void List_clear(List list) {
+void List_destroy(List list) {
 
 	if(!list) {
 		return;
@@ -224,7 +224,7 @@ bool List_deleteNode(List list, NodePtr node) {
 		return false;
 	}
 
-	Node_free(node, list->onBeforeRemove);
+	Node_destroy(node, list->destroyDataHandler);
 
 	return true;
 }

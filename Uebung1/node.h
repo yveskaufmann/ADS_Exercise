@@ -19,7 +19,7 @@ typedef int (*NodeComperator) (NodePtr prevNode, NodePtr nextNode);
 
 NodePtr Node_create(void *data, bool isDoupleLinkedNode);
 
-bool Node_free(NodePtr node, NodeHandler dataFreeHandler);
+bool Node_destroy(NodePtr node, NodeHandler dataDestroyHandler);
 
 void* Node_getData(NodePtr node);
 void Node_setData(NodePtr node, void *data);

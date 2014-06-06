@@ -39,7 +39,7 @@ List List_create();
  *
  * @param *list the pointer to the list which should be cleared.
  */
-void List_clear(List list);
+void List_destroy(List list);
 
 
 /**

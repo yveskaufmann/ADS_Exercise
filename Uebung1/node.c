@@ -43,11 +43,11 @@ NodePtr Node_create(void *data, bool isDoupleLinkedNode) {
 	return node;
 }
 
-bool Node_free(NodePtr node, NodeHandler dataFreeHandler) {
+bool Node_destroy(NodePtr node, NodeHandler dataDestroyHandler) {
 	if(!node) return false;
 
-	if(dataFreeHandler != NULL) {
-		dataFreeHandler(node, 0, Node_getData(node));
+	if(dataDestroyHandler != NULL) {
+		dataDestroyHandler(node, 0, Node_getData(node));
 	}
 
 	free(node);

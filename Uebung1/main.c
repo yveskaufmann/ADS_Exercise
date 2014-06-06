@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 	List_ForEach(list, printNodes, NULL); printf("\n");
 	// List_mergeSort(list, comperator);
 	List_ForEach(list, printNodes, NULL);
-	List_clear(list);
+	List_destroy(list);
 	return 0;
 }
 
