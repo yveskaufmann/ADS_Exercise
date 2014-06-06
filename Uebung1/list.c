@@ -22,7 +22,7 @@ struct List {
 
 
 List List_create() {
-	List list = (List) malloc(sizeof(List));
+	List list = (List) malloc(sizeof(struct List));
 	if(list == NULL) {
 		return NULL;
 	}
