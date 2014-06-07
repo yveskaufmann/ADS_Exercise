@@ -22,9 +22,9 @@ int main(int argc, char **argv) {
 	List list = List_create(Student_DestroyHandler);
 
 	List_addLast(list, (void*) Student_create("Yves", "Kaufmann", "Algorithmen", 544361));
-//	List_addLast(list, (void*) Student_create("Ksenia", "Majorova", "BWL", 5134));
-//	List_addLast(list, (void*) Student_create("Ksenia", "Majordva", "BWL", 534));
-//	List_addLast(list, (void*) Student_create("Ksenia", "Majdrova", "BWL", 5443));
+	List_addLast(list, (void*) Student_create("Ksenia", "Majorova", "BWL", 5134));
+	List_addLast(list, (void*) Student_create("Ksenia", "Majordva", "BWL", 534));
+	List_addLast(list, (void*) Student_create("Ksenia", "Majdrova", "BWL", 5443));
 	List_addLast(list, (void*) Student_create("Ksenia", "Mbjorova", "BWL", 52));
 	List_addLast(list, (void*) Student_create("Marcus", "bla", "Algorithmen", 544366));
 	List_addLast(list, (void*) Student_create("ABA", "XMK", "Algorithmen", 544367));

@@ -26,18 +26,23 @@ struct Student {
 
 static
 char* createStringClone(const char* str) {
-	if(!str) return NULL;
+	if(str == NULL) return NULL;
+	
 	int strLen = strlen(str);
 	char* strClone = (char *) malloc(strLen + 1);
+	
 	strncpy(strClone, str, strLen);
 	strClone[strLen] = (char) 0;
+	
 	return strClone;
 }
 
 
 static
 void handleNewStringSetter(char **oldString, const char* newStr) {
-	if(*oldString != NULL) free(*oldString);
+	if(*oldString != NULL) { 
+		free(*oldString);
+	}
 	*oldString = createStringClone(newStr);
 }
 
@@ -52,7 +57,8 @@ Student Student_create(char *firstName, char *sureName, char *courseName,
 			int matriculationNumber) {
 
 	Student student = malloc(sizeof(struct Student));
-
+	memset(student, 0 , sizeof(struct Student));
+	
 	Student_setFirstName(student, firstName);
 	Student_setSureName(student, sureName);
 	Student_setCoursName(student, courseName);
@@ -63,9 +69,19 @@ Student Student_create(char *firstName, char *sureName, char *courseName,
 
 void Student_destroy(Student student) {
 	if(!student) return;
-	if(!student->firstName) free(student->firstName);
-	if(!student->sureName) free(student->sureName);
-	if(!student->courseName) free(student->courseName);
+	
+	if((student->firstName) != NULL) {
+		free(student->firstName);
+	}
+
+	if((student->sureName) != NULL) { 
+		free(student->sureName);
+	}
+
+	if((student->courseName) != NULL) { 
+		free(student->courseName);
+	}
+
 	free(student);
 }
 
