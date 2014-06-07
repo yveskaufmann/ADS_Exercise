@@ -13,53 +13,26 @@
 #include <string.h>
 
 #include "list.h"
+#include "student.h"
 
 
 int main(int argc, char **argv) {
 	
 
-	int comperator(NodePtr firstNode, NodePtr secondNode) {
-		return strcmp((char*) Node_getData(firstNode), (char*) Node_getData(secondNode));
-	}
+	List list = List_create(Student_DestroyHandler);
 
-	bool printNodes(NodePtr node, size_t index, void *data) {
-		printf("%d - %s\n",(int) index + 1, (char*) Node_getData(node));
-		return true;
-	}
+	List_addLast(list, (void*) Student_create("Yves", "Kaufmann", "Algorithmen", 544361));
+//	List_addLast(list, (void*) Student_create("Ksenia", "Majorova", "BWL", 5134));
+//	List_addLast(list, (void*) Student_create("Ksenia", "Majordva", "BWL", 534));
+//	List_addLast(list, (void*) Student_create("Ksenia", "Majdrova", "BWL", 5443));
+	List_addLast(list, (void*) Student_create("Ksenia", "Mbjorova", "BWL", 52));
+	List_addLast(list, (void*) Student_create("Marcus", "bla", "Algorithmen", 544366));
+	List_addLast(list, (void*) Student_create("ABA", "XMK", "Algorithmen", 544367));
 
-	List list = List_create();
-
-	List_addLast(list, (void*) "4");
-	List_addLast(list, (void*) "2");
-	List_addLast(list, (void*) "3");
-	List_addLast(list, (void*) "6");
-	List_addLast(list, (void*) "5");
-	List_addLast(list, (void*) "7");
-	List_addLast(list, (void*) "2");
-	List_addLast(list, (void*) "1");
-
-	List_addLast(list, (void*) "4");
-	List_addLast(list, (void*) "2");
-	List_addLast(list, (void*) "3");
-	List_addLast(list, (void*) "6");
-	List_addLast(list, (void*) "5");
-	List_addLast(list, (void*) "7");
-	List_addLast(list, (void*) "2");
-	List_addLast(list, (void*) "1");
-
-
-	List_addLast(list, (void*) "4");
-	List_addLast(list, (void*) "2");
-	List_addLast(list, (void*) "3");
-	List_addLast(list, (void*) "6");
-	List_addLast(list, (void*) "5");
-	List_addLast(list, (void*) "7");
-	List_addLast(list, (void*) "2");
-	List_addLast(list, (void*) "1");
-
-	List_ForEach(list, printNodes, NULL); printf("\n");
-	List_mergeSort(list, comperator);
-	List_ForEach(list, printNodes, NULL);
+	Student_printAll(list);
+	printf("========================\n");
+	List_sort(list, Student_DefaultSortComperator);
+	Student_printAll(list);
 	List_destroy(list);
 	return 0;
 }

@@ -21,7 +21,7 @@ struct List {
 };
 
 
-List List_create() {
+List List_create(NodeHandler destroyHandler) {
 	List list = (List) malloc(sizeof(struct List));
 	if(list == NULL) {
 		return NULL;
@@ -30,7 +30,7 @@ List List_create() {
 	list->elementCount = 0;
 	list->root = NULL;
 	list->head = NULL;
-	list->destroyDataHandler = NULL;
+	list->destroyDataHandler = destroyHandler;
 	list->isDoupleLinkedList = true;
 
 	return list;
@@ -264,7 +264,7 @@ NodePtr List_findNode(List list, NodeHandler filter, void *data) {
 }
 
 List List_findAllNodes(List list, NodeHandler filter, void *data) {
-	List filteredNodes = List_create();
+	List filteredNodes = List_create(list->destroyDataHandler);
 	
 	bool filterNodes(NodePtr node, size_t index, void *data) {
 		if(filter(node, index, data)) {
@@ -308,7 +308,7 @@ void List_mergeSort(List list, NodeComperator nodeComperator) {
 
 	List merge(struct List *left, struct List *right) {
 		NodePtr node = NULL;
-		List newList = List_create();
+		List newList = List_create(list->destroyDataHandler);
 		
 		while(left->root != NULL && right->root != NULL) {
 			

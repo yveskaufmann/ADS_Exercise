@@ -19,7 +19,6 @@
 
 
 typedef struct List* List;
-
 typedef enum {
 	AFTER,
 	BEFORE
@@ -32,7 +31,7 @@ typedef enum {
  *
  * @return Pointer to the allocated root List.
  */
-List List_create();
+List List_create(NodeHandler destroyHandler);
 
 /**
  * Deallocate each element of the list.
