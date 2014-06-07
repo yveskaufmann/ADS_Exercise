@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 	List_addLast(list, (void*) "1");
 
 	List_ForEach(list, printNodes, NULL); printf("\n");
-	// List_mergeSort(list, comperator);
+	List_mergeSort(list, comperator);
 	List_ForEach(list, printNodes, NULL);
 	List_destroy(list);
 	return 0;

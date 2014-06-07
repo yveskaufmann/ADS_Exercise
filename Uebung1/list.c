@@ -356,9 +356,9 @@ void List_mergeSort(List list, NodeComperator nodeComperator) {
 		Node_setNext(left.head, NULL);
 		Node_setPrev(right.root, NULL);
 		
-		List *lSorted = sort(&left);
-		List *rSorted = sort(&right);
-		List *result = merge(lSorted, rSorted);
+		List lSorted = sort(&left);
+		List rSorted = sort(&right);
+		List result = merge(lSorted, rSorted);
 		
 		if(lSorted != &left) {
 			free(lSorted);
