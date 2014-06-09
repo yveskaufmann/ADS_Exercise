@@ -11,6 +11,8 @@
 
 #include "student.h"
 
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+
 struct Student {
 	char *firstName;
 	char *sureName;
@@ -125,7 +127,7 @@ void Student_setMatriculationNumber(Student student, int matriculationNumber) {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// DATA STRACTURE Node_ClearHandler
+// DATA STRACTURE Node_Handlers
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -144,25 +146,37 @@ bool Student_PrintHandler(NodePtr node, size_t index, void *data) {
 	return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// DATA STRACTURE NodeComperators
+//
+///////////////////////////////////////////////////////////////////////////////
+
+int Student_CourseComperator(NodePtr firstNode, NodePtr secondNode) {
+
+	const char *firstCourse = Student_getCourseName(Node_getData(firstNode));
+	const char *secondCourse = Student_getCourseName(Node_getData(secondNode));
+
+	int firstLen = strlen(firstCourse);
+	int secondLen = strlen(secondCourse);
+
+	return strncmp(firstCourse, secondCourse, MIN(firstLen, secondLen));
+
+};
+
+int Student_MarticelNrComperator(NodePtr firstNode, NodePtr secondNode) {
+
+	int firstMatricleNr = Student_getMatriculationNumber(Node_getData(firstNode));
+	int secondMatricleNr  = Student_getMatriculationNumber(Node_getData(secondNode));
+
+	return (firstMatricleNr > secondMatricleNr) ? 1 : (firstMatricleNr < secondMatricleNr) ? -1 : 0;
+};
+
+
+
 int Student_DefaultSortComperator(NodePtr firstNode, NodePtr secondNode) {
-
-	Student firstStudent = Node_getData(firstNode);
-	Student secondStudent = Node_getData(secondNode);
-	const char *firstCourse = Student_getCourseName(firstStudent);
-	const char *secondCourse = Student_getCourseName(secondStudent);
-	int firstMatricleNr = Student_getMatriculationNumber(firstStudent);
-	int secondMatricleNr = Student_getMatriculationNumber(firstStudent);
-
-	int cmpCourseName = strcmp(firstCourse, secondCourse);
-	int cmpMatriculationNr = (firstMatricleNr > secondMatricleNr) ?
-			1
-		:
-			(firstMatricleNr < secondMatricleNr) ? -1  : 0;
-
-	return (!cmpCourseName) ?
-			cmpMatriculationNr
-		:
-			cmpCourseName;
+	int cmpCourseName =  Student_CourseComperator(firstNode, secondNode);
+	return (cmpCourseName != 0) ?  cmpCourseName : Student_MarticelNrComperator(firstNode, secondNode);
 };
 
 
@@ -175,9 +189,10 @@ int Student_DefaultSortComperator(NodePtr firstNode, NodePtr secondNode) {
 void Student_print(Student student) {
 	if(!student) return;
 
-	printf("%s = %s %s\n", "Name", student->firstName, student->sureName);
-	printf("%s = s0%d\n", "Matriculation number", student->matriculationNumber);
-	printf("%s = %s \n", "Course", student->courseName);
+	printf("%-10s %-10s  %-20s  s0%-10d",student->firstName, student->sureName,student->courseName,student->matriculationNumber);
+	// printf("%s = %s %s\n", "Name", student->firstName, student->sureName);
+	// printf("%s = s0%d\n", "Matriculation number", student->matriculationNumber);
+	// printf("%s = %s \n", "Course", student->courseName);
 	printf("\n");
 
 }
