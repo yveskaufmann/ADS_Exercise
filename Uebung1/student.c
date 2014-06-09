@@ -45,7 +45,7 @@ void handleNewStringSetter(char **oldString, const char* newStr) {
 	if(*oldString != NULL) { 
 		free(*oldString);
 	}
-	*oldString = createStringClone(newStr);
+	*oldString = createStringClone(newStr == NULL ? " " : newStr);
 }
 
 
