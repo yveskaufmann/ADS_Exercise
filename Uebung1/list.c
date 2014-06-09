@@ -247,23 +247,23 @@ int List_size(List list) {
 	return list->elementCount;
 }
 
-NodePtr List_findNode(List list, NodeHandler filter, void *data) {
+NodePtr List_findNode(List list, NodeHandler filter, void *filterCriteria) {
 	NodePtr desiredNode = NULL;
 	
-	bool filterNode(NodePtr node, size_t index, void *data) {
-		if(filter(node, index, data)) {
+	bool filterNode(NodePtr node, size_t index, void *filterCriteria) {
+		if(filter(node, index, filterCriteria)) {
 			desiredNode = node;
 			return false;
 		}
 		return true;
 	}
 	
-	List_ForEach(list, filterNode, data);
+	List_ForEach(list, filterNode, filterCriteria);
 		
 	return desiredNode;
 }
 
-List List_findAllNodes(List list, NodeHandler filter, void *data) {
+List List_findAllNodes(List list, NodeHandler filter, void *filterCriteria) {
 	List filteredNodes = List_create(list->destroyDataHandler);
 	
 	bool filterNodes(NodePtr node, size_t index, void *data) {
@@ -273,7 +273,7 @@ List List_findAllNodes(List list, NodeHandler filter, void *data) {
 		return true;
 	}
 	
-	List_ForEach(list, filterNodes, data);
+	List_ForEach(list, filterNodes, filterCriteria);
 
 	return filteredNodes;
 }
