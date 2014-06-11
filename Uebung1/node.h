@@ -11,14 +11,20 @@
 #ifndef NODE_H_
 #define NODE_H_
 
+#include <assert.h>
+#include <errno.h>
+
+
+#include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct NodeDoupleLinked* NodePtr;
 typedef bool (*NodeHandler) (NodePtr node, size_t index, void *data);
 typedef int (*NodeComperator) (NodePtr prevNode, NodePtr nextNode);
 
 NodePtr Node_create(void *data, bool isDoupleLinkedNode);
-
 bool Node_destroy(NodePtr node, NodeHandler dataDestroyHandler);
 
 void* Node_getData(NodePtr node);

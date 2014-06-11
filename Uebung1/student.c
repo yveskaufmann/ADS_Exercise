@@ -9,6 +9,7 @@
 	@version 1.0 09.04.2014
 */
 
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 #include "student.h"
 
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
@@ -20,21 +21,23 @@ struct Student {
 	int matriculationNumber;
 };
 
-///////////////////////////////////////////////////////////////////////////////
-//
+//----------------------------------------------------------------------------
 // Helper functions
-//
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 
 static
 char* createStringClone(const char* str) {
 	if(str == NULL) return NULL;
 	
 	int strLen = strlen(str);
-	char* strClone = (char *) malloc(strLen + 1);
-	
+	char* strClone = (char *) malloc((strLen + 1) * sizeof(char));
+	if(strClone == NULL) {
+		fprintf(stderr, "String clone failed: \"%s\"", strerror(errno));
+		return NULL;
+	}
+
 	strncpy(strClone, str, strLen);
-	strClone[strLen] = (char) 0;
+	strClone[strLen] = '\0';
 	
 	return strClone;
 }
@@ -88,11 +91,9 @@ void Student_destroy(Student student) {
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-//
+//----------------------------------------------------------------------------
 // DATA STRACTURE Getter & Setter
-//
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 
 const char* Student_getFirstName(Student student) {
 	return student->firstName;
@@ -125,11 +126,9 @@ void Student_setMatriculationNumber(Student student, int matriculationNumber) {
 	student->matriculationNumber = matriculationNumber;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
+//----------------------------------------------------------------------------
 // DATA STRACTURE Node_Handlers
-//
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 
 
 bool Student_DestroyHandler(NodePtr node, size_t index, void *data) {
@@ -146,11 +145,9 @@ bool Student_PrintHandler(NodePtr node, size_t index, void *data) {
 	return true;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
+//----------------------------------------------------------------------------
 // DATA STRACTURE NodeComperators
-//
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 
 int Student_CourseComperator(NodePtr firstNode, NodePtr secondNode) {
 

@@ -12,11 +12,13 @@
 #ifndef _STUDENT_H_
 #define _STUDENT_H_
 
+#include <errno.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include <stddef.h>
 #include <stdio.h>
+#include <stddef.h>
 #include <string.h>
+#include <math.h>
+
 #include "list.h"
 
 typedef struct Student* Student;

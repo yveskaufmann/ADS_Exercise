@@ -9,6 +9,7 @@
 
 #include "list.h"
 
+
 /**
  * Type definition for a list segment type
  */
@@ -21,7 +22,20 @@ struct List {
 };
 
 
-List List_create(NodeHandler destroyHandler) {
+static
+NodePtr getPrevNode(NodePtr rootNode, NodePtr node) {
+	NodePtr currentNode = rootNode;
+
+	if(rootNode == node) return NULL;
+
+	while(currentNode != NULL && (Node_getNext(currentNode) != node)) {
+		currentNode = Node_getNext(currentNode);
+	}
+
+	return currentNode;
+}
+
+List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
 	List list = (List) malloc(sizeof(struct List));
 	if(list == NULL) {
 		return NULL;
@@ -73,10 +87,12 @@ NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInse
 		NodePtr oldNextNode = Node_getNext(position);
 		Node_setNext(position, newNode);
 
-		Node_setPrev(newNode, position);
+		if(list->isDoupleLinkedList) {
+			Node_setPrev(newNode, position);
+		}
 		Node_setNext(newNode, oldNextNode);
 
-		if(oldNextNode) {
+		if(oldNextNode && list->isDoupleLinkedList) {
 			Node_setPrev(oldNextNode, newNode);
 		} else {
 			list->head = newNode;
@@ -84,10 +100,12 @@ NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInse
 	}
 
 	if(dir == BEFORE) {
-		NodePtr oldPrevNode = Node_getPrev(position);
-		Node_setPrev(position, newNode);
 
-		Node_setPrev(newNode, oldPrevNode);
+		NodePtr oldPrevNode = list->isDoupleLinkedList ? Node_getPrev(position) : getPrevNode(list->root, position);
+		if(list->isDoupleLinkedList) {
+			Node_setPrev(position, newNode);
+			Node_setPrev(newNode, oldPrevNode);
+		}
 		Node_setNext(newNode, position);
 
 		if(oldPrevNode) {
@@ -98,7 +116,7 @@ NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInse
 	}
 	list->elementCount++;
 
-	return NULL;
+	return newNode;
 }
 
 NodePtr List_getNode(List list, int index) {
@@ -126,7 +144,7 @@ NodePtr List_getNode(List list, int index) {
 	NodePtr (*nodeRetriever) (NodePtr) = NULL;
 	size_t piviot = (size_t) (list->elementCount / 2);
 
-	if(index < piviot) {
+	if(!list->isDoupleLinkedList || index < piviot) {
 		currentNode = list->root;
 		nodeRetriever = Node_getNext;
 	} else {
@@ -181,10 +199,10 @@ NodePtr List_detachNode(List list, NodePtr node) {
 	}
 
 	NodePtr next = Node_getNext(node);
-	NodePtr prev = Node_getPrev(node);
+	NodePtr prev = list->isDoupleLinkedList ? Node_getPrev(node) : getPrevNode(list->root, node);
 
 	Node_setNext(node, NULL);
-	Node_setPrev(node, NULL);
+	if(list->isDoupleLinkedList) Node_setPrev(node, NULL);
 	list->elementCount--;
 
 	if(!next && !prev) { // is last node ?
@@ -193,7 +211,7 @@ NodePtr List_detachNode(List list, NodePtr node) {
 	}
 	else if(!prev) { // is start node ?
 		list->root = next;
-		Node_setPrev(next, NULL);
+		if(list->isDoupleLinkedList) Node_setPrev(next, NULL);
 	}
 	else if(!next) { // is end node ?
 		list->head = prev;
@@ -201,7 +219,7 @@ NodePtr List_detachNode(List list, NodePtr node) {
 	}
 	else { // is inside node ?
 		Node_setNext(prev, next);
-		Node_setPrev(next, prev);
+		if(list->isDoupleLinkedList) Node_setPrev(next, prev);
 	}
 	return node;
 }
@@ -242,7 +260,7 @@ bool List_deleteAllNodes(List list) {
 
 }
 
-int List_size(List list) {
+int List_getSize(List list) {
 	if(!list) return 0;
 	return list->elementCount;
 }

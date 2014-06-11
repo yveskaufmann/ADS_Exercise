@@ -12,9 +12,10 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
+#include <errno.h>
 #include <stdlib.h>
-#include <stddef.h>
 #include <stdbool.h>
+#include <string.h>
 #include "node.h"
 
 
@@ -31,7 +32,7 @@ typedef enum {
  *
  * @return Pointer to the allocated root List.
  */
-List List_create(NodeHandler destroyHandler);
+List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler);
 
 /**
  * Deallocate each element of the list.
@@ -57,7 +58,7 @@ NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInse
  * @param list The list which should expanded by the specified node.
  * @param data
  */
-void List_addLast(List list, void *data);
+bool List_addLast(List list, void *data);
 
 /**
  * Inserts the specified node at the beginning of this list.
@@ -65,7 +66,7 @@ void List_addLast(List list, void *data);
  * @param list The list which should expanded by the specified node.
  * @param data
  */
-void List_addFirst(List list, void *data);
+bool List_addFirst(List list, void *data);
 
 /**
  * Retrieve the  node from a specified list node at a specified index.
@@ -130,7 +131,7 @@ bool List_deleteAllNodes(List list);
  * @param list
  * @return
  */
-int List_size(List list);
+int List_getSize(List list);
 
 /**
  *
