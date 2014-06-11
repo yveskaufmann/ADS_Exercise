@@ -45,9 +45,12 @@ int Student_CourseComperator(NodePtr firstNode, NodePtr secondNode);
 int Student_MarticelNrComperator(NodePtr firstNode, NodePtr secondNode);
 int Student_DefaultSortComperator(NodePtr firstNode, NodePtr secondNode);
 
-
 void Student_print(Student student);
 void Student_printAll(List students);
 
+List Student_findAllByFirstName(List list, const char* name);
+List Student_findAllBySureName(List list, const char* name);
+List Student_findAllByCourseName(List list, const char* name);
+List Student_findAllByMatriculationNumber(List list,int matriculationNumber);
 
 #endif /* _STUDENT_H_ */

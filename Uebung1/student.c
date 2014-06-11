@@ -181,26 +181,76 @@ int Student_DefaultSortComperator(NodePtr firstNode, NodePtr secondNode) {
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
-//
+//----------------------------------------------------------------------------
 // DATA STRACTURE print
-//
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 
 void Student_print(Student student) {
 	if(!student) return;
-
 	printf("%-10s %-10s  %-20s  s0%-10d",student->firstName, student->sureName,student->courseName,student->matriculationNumber);
-	// printf("%s = %s %s\n", "Name", student->firstName, student->sureName);
-	// printf("%s = s0%d\n", "Matriculation number", student->matriculationNumber);
-	// printf("%s = %s \n", "Course", student->courseName);
 	printf("\n");
 
 }
 
 void Student_printAll(List studentList) {
 	if(!studentList) return;
+	printf("%-10s %-10s  %-20s  %-12s\n","First-Name", "Sure-Name", "Course-Name", "Matriculation-Number");
+	printf("\n");
 	List_ForEach(studentList, Student_PrintHandler, NULL);
+}
+
+//----------------------------------------------------------------------------
+// DATA STRACTURE find
+//----------------------------------------------------------------------------
+
+static
+bool testIfStringMatches(const char* str, const char* strOther) {
+	int lenStr = strlen(str);
+	int lenStrOther = strlen(strOther);
+
+	return 0 == strncmp(str, strOther, MIN(lenStr, lenStrOther));
+}
+
+List Student_findAllByFirstName(List list, const char* firstName) {
+	bool filterNodes(NodePtr node, size_t index, void *data) {
+		Student student = Node_getData(node);
+		return testIfStringMatches(data,Student_getFirstName(student));
+	}
+	return List_findAllNodes(list, filterNodes, (void *)firstName);
+}
+
+List Student_findAllBySureName(List list, const char* sureName) {
+	bool filterNodes(NodePtr node, size_t index, void *data) {
+		Student student = Node_getData(node);
+		return testIfStringMatches(data,Student_getSureName(student));
+	}
+	return List_findAllNodes(list, filterNodes, (void *)sureName);
+}
+
+List Student_findAllByCourseName(List list, const char* courseName) {
+	bool filterNodes(NodePtr node, size_t index, void *data) {
+		Student student = Node_getData(node);
+		return testIfStringMatches(data,Student_getCourseName(student));
+	}
+	return List_findAllNodes(list, filterNodes, (void *)courseName);
+}
+
+List Student_findAllByMatriculationNumber(List list,int matriculationNumber) {
+
+	int countOfDigitsDesiredMtr = log10(matriculationNumber);
+
+	bool filterNodes(NodePtr node, size_t index, void *data) {
+		Student student = Node_getData(node);
+		int currentMtrNumber = Student_getMatriculationNumber(student);
+		int countOfDigtsCurrentMtr = log10(currentMtrNumber);
+
+		if(countOfDigitsDesiredMtr > countOfDigtsCurrentMtr) return false;
+		if(countOfDigitsDesiredMtr == countOfDigtsCurrentMtr) return matriculationNumber == currentMtrNumber;
+
+		return ((int)floor( currentMtrNumber / pow(10, countOfDigtsCurrentMtr - countOfDigtsCurrentMtr))) == matriculationNumber;
+	}
+
+	return List_findAllNodes(list, filterNodes, NULL);
 }
 
 
