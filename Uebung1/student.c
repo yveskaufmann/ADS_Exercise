@@ -208,7 +208,7 @@ bool testIfStringMatches(const char* str, const char* strOther) {
 	int lenStr = strlen(str);
 	int lenStrOther = strlen(strOther);
 
-	return 0 == strncmp(str, strOther, MIN(lenStr, lenStrOther));
+	return 0 == strncasecmp(str, strOther, MIN(lenStr, lenStrOther));
 }
 
 List Student_findAllByFirstName(List list, const char* firstName) {
