@@ -16,7 +16,7 @@ struct NodeSingleLinked {
 	bool isDoupleLinkedNode;
 	void *data;
 	NodePtr next;
-};
+}; 
 
 struct NodeDoupleLinked {
 	bool isDoupleLinkedNode;

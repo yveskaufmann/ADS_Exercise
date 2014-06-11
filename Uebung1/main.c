@@ -48,7 +48,6 @@ static
 void filterStudent(List list);
 
 int main(int argc, char **argv) {
-
 	char cmd = '?';
 	List students = createSampleStudentList();
 	for(;;) {

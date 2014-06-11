@@ -13,7 +13,7 @@
 size_t readline(char *prompt, char* buffer, size_t maxBytesToRead) {
 	
 	if(prompt != NULL) {
-		printf("%s : ", prompt);
+		printf("%s: ", prompt);
 	}
 
 	if((fgets(buffer, maxBytesToRead, stdin)) == NULL) {
