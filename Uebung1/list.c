@@ -9,7 +9,6 @@
 
 #include "list.h"
 
-
 /**
  * Type definition for a list segment type
  */
@@ -303,7 +302,7 @@ List List_findAllNodes(List list, NodeHandler filter, void *filterCriteria) {
 	return filteredNodes;
 }
 
-void List_sort(List list, NodeComperator nodeComperator) {
+void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder) {
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
@@ -316,7 +315,7 @@ void List_sort(List list, NodeComperator nodeComperator) {
 		countOfSwaps = 0;
 		for(currNode = list->root; Node_getNext(currNode) != lastNode; currNode = Node_getNext(currNode)) {
 			NodePtr nextNode = Node_getNext(currNode);
-			if( nodeComperator(currNode, nextNode) > 0) {
+			if( nodeComperator(currNode, nextNode) * sortOrder > 0) {
 				Node_swapNodes(currNode, nextNode);
 				countOfSwaps++;
 			}
@@ -326,7 +325,7 @@ void List_sort(List list, NodeComperator nodeComperator) {
 	} while(countOfSwaps > 0);
 }
 
-void List_mergeSort(List list, NodeComperator nodeComperator) {
+void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder) {
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
@@ -342,7 +341,7 @@ void List_mergeSort(List list, NodeComperator nodeComperator) {
 		
 		while(left->root != NULL && right->root != NULL) {
 			
-			if(nodeComperator(left->root, right->root) <= 0) {
+			if(nodeComperator(left->root, right->root) * sortOrder <= 0) {
 				node = List_detachNode(left, left->root);	
 			} else {
 				node = List_detachNode(right, right->root);

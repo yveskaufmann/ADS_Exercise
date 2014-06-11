@@ -6,7 +6,7 @@
 # 
 
 CC=gcc
-OPTIONS=-g -Wall -std=c99 -Winline -x c
+OPTIONS=-g -Wall -std=c99 -Winline -x c 
 DEBUG_OPTIONS= -Oo -fno-inline
 TARGET=list
 
@@ -24,7 +24,7 @@ TESTARGUMENTS=
 	@echo $*
 
 $(TARGET): *.c
-	$(CC) $(OPTIONS) *.c -o $(TARGET) 
+	$(CC) $(OPTIONS) *.c -o $(TARGET) -lm 
 
 doc:	*.c
 	$(DOC) $(DOCCONFIG) $(TARGET)

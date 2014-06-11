@@ -11,11 +11,13 @@
 #include "readerHelper.h"
 
 size_t readline(char *prompt, char* buffer, size_t maxBytesToRead) {
+	
 	if(prompt != NULL) {
 		printf("%s : ", prompt);
 	}
-	fflush(stdin);
+
 	if((fgets(buffer, maxBytesToRead, stdin)) == NULL) {
+		perror("Readline failed");
 		return -1;
 	}
 	size_t size = strlen(buffer);
@@ -48,57 +50,14 @@ int readInteger(const char *prompt, int min, int max) {
 	return integerValue;
 }
 
-char* readKeyWords(const char *prompt, char *enteredKeyWord, size_t bufferSize, size_t countOfKeys, ...) {
-
-
-	// prepare key word list format string
-	va_list keyWords;
-
-	int lenOfKeyListFormat = (4 * countOfKeys + 1);
-	char *promptKeyListFormatStr = malloc(lenOfKeyListFormat);
-	promptKeyListFormatStr[lenOfKeyListFormat - 1] =  '\0';
-	bool hasInvalidKeyWord = true;
-
-	// generate format string
-	int offset = 0;
-	for(int i = 0; i < countOfKeys; i++) {
-		char *formatDesc = ", %s";
-		if(offset == 0) {
-			formatDesc = "%s";
-		}
-		strcpy(promptKeyListFormatStr + offset, formatDesc);
-		if(offset == 0) {
-			offset+=2;
-		} else {
-			offset+=4;
-		}
+char readChar(char *prompt) {
+	if(prompt != NULL) {
+		printf("%s : ", prompt);
 	}
+	char enteredChar = getchar();
+	// flush input stream buffer
+	char c;
+	while((c = getchar() != '\n') && c != EOF); // FLUSHING
 
-	// read keyword
-	while(hasInvalidKeyWord) {
-		va_start(keyWords, countOfKeys);
-		printf("%s [", prompt);
-		vprintf(promptKeyListFormatStr, keyWords);
-		printf("]: ");
-
-		hasInvalidKeyWord = true;
-		readline(NULL, enteredKeyWord, bufferSize);
-		for(int i = 0; i < countOfKeys && hasInvalidKeyWord; i++) {
-			char *keyWord = va_arg(keyWords, char*);
-			hasInvalidKeyWord = strcmp(keyWord, enteredKeyWord) != 0;
-		}
-		va_end(keyWords);
-
-		if(hasInvalidKeyWord) {
-			printf("Invalid keyword entered \"%s\", please try it again.\n", enteredKeyWord);
-		}
-
-	}
-	printf("\n");
-	free(promptKeyListFormatStr);
-
-	return enteredKeyWord;
-
+	return enteredChar;
 }
-
-

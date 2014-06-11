@@ -237,17 +237,17 @@ List Student_findAllByCourseName(List list, const char* courseName) {
 
 List Student_findAllByMatriculationNumber(List list,int matriculationNumber) {
 
-	int countOfDigitsDesiredMtr = log10(matriculationNumber);
+	int countOfDigitsDesiredMtr = log(matriculationNumber) / log(10);
 
 	bool filterNodes(NodePtr node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		int currentMtrNumber = Student_getMatriculationNumber(student);
-		int countOfDigtsCurrentMtr = log10(currentMtrNumber);
+		int countOfDigtsCurrentMtr = log(currentMtrNumber) / log(10);
 
 		if(countOfDigitsDesiredMtr > countOfDigtsCurrentMtr) return false;
 		if(countOfDigitsDesiredMtr == countOfDigtsCurrentMtr) return matriculationNumber == currentMtrNumber;
 
-		return ((int)floor( currentMtrNumber / pow(10, countOfDigtsCurrentMtr - countOfDigtsCurrentMtr))) == matriculationNumber;
+		return ((int)( currentMtrNumber / pow(10, countOfDigtsCurrentMtr - countOfDigtsCurrentMtr))) == matriculationNumber;
 	}
 
 	return List_findAllNodes(list, filterNodes, NULL);

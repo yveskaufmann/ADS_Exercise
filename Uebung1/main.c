@@ -28,10 +28,12 @@
 #define YES_CMD 'y'
 #define NO_CMD 'n'
 
-#define FIRSTNAME_STUDENTS_PROPERTY "f"
-#define SURENAME_STUDENTS_PROPERTY "s"
-#define COURSE_STUDENTS_PROPERTY "c"
-#define MATRICULATION_NR_STUDENTS_PROPERTY "m"
+#define FIRSTNAME_STUDENTS_PROPERTY 'f'
+#define SURENAME_STUDENTS_PROPERTY 's'
+#define COURSE_STUDENTS_PROPERTY 'c'
+#define MATRICULATION_NR_STUDENTS_PROPERTY 'm'
+#define STUDENT_INSERT_START 's'
+#define STUDENT_INSERT_END 'e'
 
 static
 List createSampleStudentList();
@@ -59,8 +61,8 @@ int main(int argc, char **argv) {
 				printf("\t%c - %s\n", DEL_CMD, "Removes a student from the student list.");
 				printf("\t%c - %s\n", FILTER_CMD, "Filters the list of students.");
 				printf("\t%c - %s\n", PRINT_CMD, "Prints the list of students.");
-				printf("\t%c - %s\n", SORT_BUBBLESORT_CMD, "Sorts the list of students with bubble sort.");
-				printf("\t%c - %s\n", SORT_MERGESORT_CMD, "Sorts the list of students with merge sort.");
+				printf("\t%c - %s\n", SORT_BUBBLESORT_CMD, "Sorts students in ascending sort order with bubble sort.");
+				printf("\t%c - %s\n", SORT_MERGESORT_CMD, "Sorts students in descending sort order with merge sort.");
 				printf("\t%c - %s\n", QUIT_CMD, "Exits this application.");
 				printf("\t%c - %s\n", MAIN_CMD, "Shows the application help page");
 				printf("\n");
@@ -84,12 +86,12 @@ int main(int argc, char **argv) {
 				Student_printAll(students);
 			break;
 			case SORT_BUBBLESORT_CMD:
-				List_sort(students, Student_DefaultSortComperator);
+				List_sort(students, Student_DefaultSortComperator, ASC);
 				cmd = PRINT_CMD;
 				continue;
 			break;
 			case SORT_MERGESORT_CMD:
-				List_mergeSort(students, Student_DefaultSortComperator);
+				List_mergeSort(students, Student_DefaultSortComperator, DESC);
 				cmd = PRINT_CMD;
 				continue;
 			break;
@@ -106,8 +108,7 @@ int main(int argc, char **argv) {
 
 		printf("\nWhat you wanna do [%c, %c, %c, %c, %c, %c, %c, %c]?\n",
 				ADD_CMD, DEL_CMD, FILTER_CMD, PRINT_CMD, SORT_BUBBLESORT_CMD, SORT_MERGESORT_CMD, QUIT_CMD, MAIN_CMD);
-		fflush(stdin);
-		cmd = getchar();
+		cmd = readChar(NULL);
 		printf("\n");
 
 	}
@@ -136,27 +137,30 @@ void addStudent(List list) {
 	char firstname[255];
 	char surename[255];
 	char coursename[255];
-	char insertPosition[6];
+	char insertPosition;
 	int matriculationNumber;
 	Student student = NULL;
 
 	do {
-		printf("Please enter the properties for the new student:  \n");
+		printf("Please enter the properties for the new student:	\n");
 		readline("Firsname", firstname, 255);
 		readline("Surename", surename, 255);
 		readline("Course", coursename, 255);
 		matriculationNumber = readInteger("Matriculation number", 0, INT_MAX);
-		readKeyWords("Insert Position",insertPosition, 6, 2, "start", "end");
-		printf("Are you happy with inputs [%c, %c]?\n", YES_CMD, NO_CMD);
-		fflush(stdin);
-	} while(getchar() == NO_CMD);
+		printf("\n");
+		printf("Please choose the insert position for the new student: \n");
+		printf("%c - %s\n", STUDENT_INSERT_START, "Start: inserts the new student at the start of the list.");
+		printf("%c - %s\n", STUDENT_INSERT_END, "END: inserts the new student at the end of the list.");
+		insertPosition = readChar("Insert Position");
+		printf("\nAre you happy with your inputs [%c, %c]?\n", YES_CMD, NO_CMD);
+	} while(readChar(NULL) == NO_CMD);
 
 	student = Student_create(firstname, surename, coursename, matriculationNumber);
 
-	if(insertPosition[0] == 'e') {
-		List_addLast(list, student);
-	} else {
+	if(insertPosition == STUDENT_INSERT_START) {
 		List_addFirst(list, student);
+	} else {
+		List_addLast(list, student);
 	}
 }
 
@@ -173,35 +177,42 @@ void removeStudent(List list) {
 
 static
 void filterStudent(List list) {
+	char desiredFilterProperty = 0;
 	char filterText[255];
 	int matriculationFilter = 0;
 	List filteredStudents = NULL;
 
-	printf("%s - %s\n", FIRSTNAME_STUDENTS_PROPERTY, "Filters by the firstname.");
-	printf("%s - %s\n", SURENAME_STUDENTS_PROPERTY, "Filters by the lastname.");
-	printf("%s - %s\n", COURSE_STUDENTS_PROPERTY,  "Filters by the course.");
-	printf("%s - %s\n", MATRICULATION_NR_STUDENTS_PROPERTY,  "Filters by the Matriculation number.");
-	readKeyWords("Please choose a propertywhich you wanna use for students filtering?",filterText, 255, 4,
-			FIRSTNAME_STUDENTS_PROPERTY, SURENAME_STUDENTS_PROPERTY, COURSE_STUDENTS_PROPERTY, MATRICULATION_NR_STUDENTS_PROPERTY );
-
-	if(FIRSTNAME_STUDENTS_PROPERTY[0] == filterText[0]) {
-		readline("Please enter your firsname filter value", filterText, 255);
-		filteredStudents = Student_findAllByFirstName(list, filterText);
-	}
-	else
-	if(SURENAME_STUDENTS_PROPERTY[0] == filterText[0]) {
-		readline("Please enter your surename filter value", filterText, 255);
-		filteredStudents = Student_findAllBySureName(list, filterText);
-	}
-	else
-	if(COURSE_STUDENTS_PROPERTY[0] == filterText[0]) {
-		readline("Please enter your course filter value", filterText, 255);
-		filteredStudents = Student_findAllByCourseName(list, filterText);
-	}
-	else
-	if(MATRICULATION_NR_STUDENTS_PROPERTY[0] == filterText[0]) {
-		matriculationFilter = readInteger("Please enter your matriculation number filter value", 0, INT_MAX);
-		filteredStudents = Student_findAllByMatriculationNumber(list, matriculationFilter);
+	printf("%c - %s\n", FIRSTNAME_STUDENTS_PROPERTY, "Filters by the firstname.");
+	printf("%c - %s\n", SURENAME_STUDENTS_PROPERTY, "Filters by the lastname.");
+	printf("%c - %s\n", COURSE_STUDENTS_PROPERTY,  "Filters by the course.");
+	printf("%c - %s\n", MATRICULATION_NR_STUDENTS_PROPERTY,  "Filters by the Matriculation number.");
+		
+	desiredFilterProperty = readChar("Please choose a propertywhich you wanna use for students filtering?");
+	//readKeyWords("Please choose a propertywhich you wanna use for students filtering?",filterText, 255, 4,
+	//		FIRSTNAME_STUDENTS_PROPERTY, SURENAME_STUDENTS_PROPERTY, COURSE_STUDENTS_PROPERTY, MATRICULATION_NR_STUDENTS_PROPERTY );
+	
+	switch(desiredFilterProperty) {
+		case FIRSTNAME_STUDENTS_PROPERTY:
+			readline("Please enter your firsname filter value", filterText, 255);
+			filteredStudents = Student_findAllByFirstName(list, filterText);
+		break;
+		case SURENAME_STUDENTS_PROPERTY:
+			readline("Please enter your surename filter value", filterText, 255);
+			filteredStudents = Student_findAllBySureName(list, filterText);
+		break;
+		case COURSE_STUDENTS_PROPERTY:
+			readline("Please enter your course filter value", filterText, 255);
+			filteredStudents = Student_findAllByCourseName(list, filterText);
+		break;
+		case MATRICULATION_NR_STUDENTS_PROPERTY:
+			matriculationFilter = readInteger("Please enter your matriculation number filter value", 0, INT_MAX);
+			filteredStudents = Student_findAllByMatriculationNumber(list, matriculationFilter);
+		break;
+		default:
+			printf("The entered student property is invalid \"%c\" is invalid.\n", desiredFilterProperty);
+			return;
+		break;
+			
 	}
 
 	printf("Filtered Students: \n");
@@ -211,5 +222,5 @@ void filterStudent(List list) {
 		Student_printAll(filteredStudents);
 	}
 
-	free(filteredStudents);
+	List_destroy(filteredStudents);
 }

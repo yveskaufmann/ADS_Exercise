@@ -25,6 +25,10 @@ typedef enum {
 	BEFORE
 } NodeInsertDirection;
 
+typedef enum {
+	ASC = 1,
+	DESC = -1 
+} NodeSortOrder;
 
 /**
  * Just create and initialize root element of the list.
@@ -150,8 +154,8 @@ NodePtr List_findNode(List list, NodeHandler filter, void *data);
 List List_findAllNodes(List list, NodeHandler filter, void *data);
 
 
-void List_sort(List list, NodeComperator nodeComperator);
+void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
 
-void List_mergeSort(List list, NodeComperator nodeComperator);
+void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
 
 #endif /* LIST_H_ */
