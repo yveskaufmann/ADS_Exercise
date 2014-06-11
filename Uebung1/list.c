@@ -38,6 +38,7 @@ NodePtr getPrevNode(NodePtr rootNode, NodePtr node) {
 List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
 	List list = (List) malloc(sizeof(struct List));
 	if(list == NULL) {
+		fprintf(stderr, "List creation failed: \"%s\"", strerror(errno));
 		return NULL;
 	}
 
@@ -45,26 +46,29 @@ List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
 	list->root = NULL;
 	list->head = NULL;
 	list->destroyDataHandler = destroyHandler;
-	list->isDoupleLinkedList = true;
+	list->isDoupleLinkedList = isDoupleLinkedList;
 
 	return list;
 }
 
-void List_addFirst(List list, void *data) {
+bool List_addFirst(List list, void *data) {
 	NodePtr newNode = Node_create(data, list->isDoupleLinkedList);
 	if(newNode == NULL) {
-		return;
+		return false;
 	}
 	List_insertNodeAt(list,newNode, list->root, BEFORE);
+	return true;
 }
 
-void List_addLast(List list, void *data) {
+bool List_addLast(List list, void *data) {
 	NodePtr newNode = Node_create(data, list->isDoupleLinkedList);
 	if(newNode == NULL) {
-		return;
+		return false;
 	}
 	List_insertNodeAt(list,newNode, list->head, AFTER);
+	return true;
 }
+
 
 NodePtr List_insertNodeAt(List list, NodePtr newNode, NodePtr position, NodeInsertDirection dir) {
 
@@ -282,8 +286,11 @@ NodePtr List_findNode(List list, NodeHandler filter, void *filterCriteria) {
 }
 
 List List_findAllNodes(List list, NodeHandler filter, void *filterCriteria) {
-	List filteredNodes = List_create(list->destroyDataHandler);
-	
+	List filteredNodes = List_create(false, NULL);
+	if(filteredNodes == NULL) {
+		return NULL;
+	}
+
 	bool filterNodes(NodePtr node, size_t index, void *data) {
 		if(filter(node, index, data)) {
 			List_addLast(filteredNodes, Node_getData(node));
@@ -326,7 +333,12 @@ void List_mergeSort(List list, NodeComperator nodeComperator) {
 
 	List merge(struct List *left, struct List *right) {
 		NodePtr node = NULL;
-		List newList = List_create(list->destroyDataHandler);
+
+		List newList = List_create(list->isDoupleLinkedList, list->destroyDataHandler);
+		if(newList == NULL) {
+			fprintf(stderr, "List mergSort: list creation failed: \"%s\"", strerror(errno));
+			return NULL;
+		}
 		
 		while(left->root != NULL && right->root != NULL) {
 			
@@ -348,11 +360,12 @@ void List_mergeSort(List list, NodeComperator nodeComperator) {
 			node = List_detachNode(right, right->root);	
 			List_insertNodeAt(newList, node, newList->head, AFTER);     
 		}
+
 		return newList;
 	} 
 		
 	List sort(List _list) {
-		if(_list->elementCount <= 1) {  
+		if(_list->elementCount <= 1 || _list == NULL) {
 			return _list;
 		}
 		
@@ -361,37 +374,48 @@ void List_mergeSort(List list, NodeComperator nodeComperator) {
 		
 		struct List left = {
 			.root =  _list->root,
-			.head = Node_getPrev(midNode),
-			.elementCount = mid
+			.head = (_list->isDoupleLinkedList ? Node_getPrev(midNode) : getPrevNode(_list->root, midNode)),
+			.elementCount = mid,
+			.isDoupleLinkedList = _list->isDoupleLinkedList
 		};
 
 		struct List right = {
 			.root =  midNode,
 			.head = _list->head,
-			.elementCount = _list->elementCount - left.elementCount
+			.elementCount = _list->elementCount - left.elementCount,
+			.isDoupleLinkedList = _list->isDoupleLinkedList
 		};
 		
 		Node_setNext(left.head, NULL);
-		Node_setPrev(right.root, NULL);
+		if(_list->isDoupleLinkedList) {
+			Node_setPrev(right.root, NULL);
+		}
+
 		
 		List lSorted = sort(&left);
 		List rSorted = sort(&right);
 		List result = merge(lSorted, rSorted);
 		
-		if(lSorted != &left) {
+		if(lSorted != NULL && lSorted != &left) {
 			free(lSorted);
 		}
 			
-		if(rSorted != &right) {
+		if(rSorted != NULL && rSorted != &right) {
 			free(rSorted);
+		}
+
+		if(lSorted == NULL || rSorted == NULL) {
+			return NULL;
 		}
 
 		return result;
 	}
 
 	List newList = sort(list);
-	list->root = newList->root;
-	list->head = newList->head;
-	list->elementCount = newList->elementCount;
-	free(newList);
+	if(newList != NULL) {
+		list->root = newList->root;
+		list->head = newList->head;
+		list->elementCount = newList->elementCount;
+		free(newList);
+	}
 }

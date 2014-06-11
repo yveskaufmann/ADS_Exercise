@@ -7,18 +7,15 @@
 	@author fxdapokalypse
 	@version 1.0 06.06.2014
 */
-#include <assert.h>
-#include <stdlib.h>
-#include <stdbool.h>
+
 #include "node.h"
 
+extern errno;
 
 struct NodeSingleLinked {
 	bool isDoupleLinkedNode;
 	void *data;
 	NodePtr next;
-
-
 };
 
 struct NodeDoupleLinked {
@@ -32,10 +29,18 @@ NodePtr Node_create(void *data, bool isDoupleLinkedNode) {
 	NodePtr node = NULL;
 	if(isDoupleLinkedNode) {
 		node = malloc(sizeof(struct NodeDoupleLinked));
+		if(node == NULL) {
+			fprintf(stderr, "DoupleLinkedNode creation failed: \"%s\"", strerror(errno));
+			return NULL;
+		}
 		node->isDoupleLinkedNode = true;
 		Node_setPrev(node, NULL);
 	} else {
 		node = malloc(sizeof(struct NodeSingleLinked));
+		if(node == NULL) {
+			fprintf(stderr, "SingleLinkedNode creation failed: \"%s\"", strerror(errno));
+			return NULL;
+		}
 		node->isDoupleLinkedNode = false;
 	}
 	Node_setNext(node, NULL);
@@ -83,6 +88,7 @@ bool Node_isDoupleLinkedNode(NodePtr node) {
 }
 
 void Node_swapNodes(NodePtr firstNode, NodePtr secondNode) {
+
 	if(!firstNode || !secondNode || firstNode == secondNode) {
 		return;
 	}
@@ -91,6 +97,7 @@ void Node_swapNodes(NodePtr firstNode, NodePtr secondNode) {
 	firstNode->data = secondNode->data;
 	secondNode->data = data;
 }
+
 
 
 

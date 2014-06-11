@@ -12,7 +12,7 @@
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 #include "student.h"
 
-#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+extern int errno;
 
 struct Student {
 	char *firstName;
@@ -51,17 +51,21 @@ void handleNewStringSetter(char **oldString, const char* newStr) {
 	*oldString = createStringClone(newStr == NULL ? " " : newStr);
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 //
 // DATA STRACTURE Implementation
 //
-///////////////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------------
 
 Student Student_create(char *firstName, char *sureName, char *courseName,
 			int matriculationNumber) {
 
 	Student student = malloc(sizeof(struct Student));
+	if(student == NULL) {
+		fprintf(stderr, "Student creation failed: \"%s\"", strerror(errno));
+		return NULL;
+	}
+
 	memset(student, 0 , sizeof(struct Student));
 	
 	Student_setFirstName(student, firstName);
