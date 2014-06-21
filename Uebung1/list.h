@@ -1,10 +1,22 @@
 /**
-* This file contains the interface to the list data structure.
-*
-* @file list.h
-* @author Yves Kaufmann
-* @date 12 Jun 2014
-*/
+ * This file contains the interface to the single linked list
+ * and double linked list data structure.
+ *
+ * The interface contains only the public access function to
+ * the data structure hence the user of this list could
+ * not access the intern list data structure directly.
+ * The data structure have to be provided by the
+ * implementation of the list data structure.
+ * This prevents that the internal state data structure can
+ * corrupted by the outside. Furthermore this allows
+ * to change the intern data structure without changing the
+ * code which uses the list.
+ *
+ *
+ * @file list.h
+ * @author Yves Kaufmann
+ * @date 12 Jun 2014
+ */
 
 #ifndef _LIST_H_
 #define _LIST_H_
@@ -16,23 +28,52 @@
 
 #include "node.h"
 
-
+/**
+ * The handle to a specific list which have to be assigned to
+ * to a list function in order to work with the specific list.
+ *
+ * The handle is implemented as incomplete type which means
+ * the user of this interface could not use the type List
+ * as pointer. Hence a user of the list have to use
+ * type 'List' only as handle to specific list.
+ *
+ */
 typedef struct List* List;
+
+/**
+ * A enumeration of directions in which a node could be inserted to a list.
+ */
 typedef enum {
+	/**
+	 * A node should be inserted after a specific node.
+	 */
 	AFTER,
+	/**
+	 * A node should be inserted before a specific node.
+	 */
 	BEFORE
 } NodeInsertDirection;
 
+/**
+ * A enumeration of sort orders.
+ */
 typedef enum {
+	/**
+	 * A list should be sorted in ascending order.
+	 */
 	ASC = 1,
+	/**
+	 * A list should be sorted in descending order.
+	 */
 	DESC = -1 
 } NodeSortOrder;
 
 /**
- * @brief Just create and initialize root element of the list.
+ * Just creates a empty list and specifies if a single or double linked list should be created.
  *
- *
- * @return Pointer to the allocated root List.
+ * @param isDoubleLinkedList
+ * @param destroyHandler
+ * @return the list handle to the successfully created list otherwise NULL.
  */
 List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler);
 
