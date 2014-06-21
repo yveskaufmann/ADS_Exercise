@@ -26,8 +26,8 @@ TESTARGUMENTS=
 $(TARGET): *.c
 	$(CC) $(OPTIONS) *.c -o $(TARGET) -lm 
 
-doc:	*.c
-	$(DOC) $(DOCCONFIG) $(TARGET)
+doc: *.c
+	$(DOC) $(DOCCONFIG) 
 
 doc-gen-config-file:
 	$(DOC) -g $(DOCCONFIG)
@@ -42,7 +42,7 @@ clean:
 	rm -f $(TARGET)
 
 doc-clean:
-	rm -rf docu 
+	rm -rf doc 
 
 help:
 	@echo Targets
