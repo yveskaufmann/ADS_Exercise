@@ -16,7 +16,7 @@ DOC=doxygen
 DOCCONFIG=doxygen.config
 
 MEMCHECKPRGRAM=valgrind 
-MEMCHECKPARAMETERS=--tool=memcheck 
+MEMCHECKPARAMETERS=--tool=memcheck -v 
 
 TESTARGUMENTS=
 
