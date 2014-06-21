@@ -1,12 +1,9 @@
 /**
-	
-
-	Project: List
-	File: list.h
-	Purpose: 
-
-	@author fxdapokalypse
-	@version 1.0 09.04.2014
+* This file contains the interface to the list data structure.
+*
+* @file list.h
+* @author Yves Kaufmann
+* @date 12 Jun 2014
 */
 
 #ifndef _LIST_H_
@@ -16,6 +13,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+
 #include "node.h"
 
 
@@ -31,7 +29,7 @@ typedef enum {
 } NodeSortOrder;
 
 /**
- * Just create and initialize root element of the list.
+ * @brief Just create and initialize root element of the list.
  *
  *
  * @return Pointer to the allocated root List.
@@ -152,7 +150,6 @@ NodePtr List_findNode(List list, NodeHandler filter, void *data);
  * @return
  */
 List List_findAllNodes(List list, NodeHandler filter, void *data);
-
 
 void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
 

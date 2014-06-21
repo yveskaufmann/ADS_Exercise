@@ -184,11 +184,9 @@ void filterStudent(List list) {
 	printf("%c - %s\n", FIRSTNAME_STUDENTS_PROPERTY, "Filters by the firstname.");
 	printf("%c - %s\n", SURENAME_STUDENTS_PROPERTY, "Filters by the lastname.");
 	printf("%c - %s\n", COURSE_STUDENTS_PROPERTY,  "Filters by the course.");
-	printf("%c - %s\n", MATRICULATION_NR_STUDENTS_PROPERTY,  "Filters by the Matriculation number.");
+	printf("%c - %s\n\n", MATRICULATION_NR_STUDENTS_PROPERTY,  "Filters by the Matriculation number.");
 		
 	desiredFilterProperty = readChar("Please choose a propertywhich you wanna use for students filtering?");
-	//readKeyWords("Please choose a propertywhich you wanna use for students filtering?",filterText, 255, 4,
-	//		FIRSTNAME_STUDENTS_PROPERTY, SURENAME_STUDENTS_PROPERTY, COURSE_STUDENTS_PROPERTY, MATRICULATION_NR_STUDENTS_PROPERTY );
 	
 	switch(desiredFilterProperty) {
 		case FIRSTNAME_STUDENTS_PROPERTY:
@@ -214,7 +212,6 @@ void filterStudent(List list) {
 			
 	}
 
-	printf("Filtered Students: \n");
 	if(List_getSize(filteredStudents) <= 0) {
 		printf("No students were found.\n");
 	} else {

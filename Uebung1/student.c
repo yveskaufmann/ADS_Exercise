@@ -194,6 +194,7 @@ void Student_print(Student student) {
 
 void Student_printAll(List studentList) {
 	if(!studentList) return;
+	printf("Count of students: %d\n", List_getSize(studentList));
 	printf("%-10s %-10s  %-20s  %-12s\n","First-Name", "Sure-Name", "Course-Name", "Matriculation-Number");
 	printf("\n");
 	List_ForEach(studentList, Student_PrintHandler, NULL);
