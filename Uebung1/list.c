@@ -1,26 +1,58 @@
 /**
-	
-	Project: List
-	File: list.c
-	Purpose: 
-	@author fxdapokalypse
-	@version 1.0 09.04.2014
-*/
+ * The default implementation of single and double linked list.
+ *
+ * @file list.c
+ * @author Yves Kaufmann
+ * @date 12 Jun 2014
+ */
 
 #include "list.h"
 
 /**
- * Type definition for a list segment type
+ * Struct of the list data structure.
  */
 struct List {
+	/**
+	 * The handle of the first node of this list.
+	 * The value NULL signals the list is empty.
+	 */
 	Node root;
+	/**
+	 * The handle of the last node of this list.
+	 * The value NULL signals the list is empty.
+	 */
 	Node head;
+	/**
+	 * The optional assigned destroyHandler which should
+	 * be used for node deallocation inside this list.
+	 */
 	NodeHandler destroyDataHandler;
+	/**
+	 * The count of nodes in the list.
+	 */
 	size_t elementCount;
+	/**
+	 * A flag which indicates that this list is a douple linked list (in the case of true)
+	 * or a single linked list in the case of false.
+	 */
 	bool isDoupleLinkedList;
 };
 
 
+/**
+ * Determines the predecessor (previous node) of a specified node.
+ *
+ * This function is used as fall back implementation for a single linked list
+ * which doesn't provide a connection between a node and his predecessor.
+ *
+ * NOTE: this function is only used internaly inside the list implementation.
+ *
+ * @param[in] rootNode	The handle of the root node of this list.
+ * @param[in] node		The handle of the specified node for which the predecessor should be determined.
+ *
+ * @return 	The node handle of the predecessor or
+ * 		 	NULL if the current node doesn't have a predecessor.
+ */
 static
 Node getPrevNode(Node rootNode, Node node) {
 	Node currentNode = rootNode;
@@ -117,6 +149,7 @@ Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirecti
 			list->root = newNode;
 		}
 	}
+
 	list->elementCount++;
 
 	return newNode;
