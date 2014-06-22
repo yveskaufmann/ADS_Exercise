@@ -21,7 +21,6 @@
 #ifndef _LIST_H_
 #define _LIST_H_
 
-#include <errno.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>

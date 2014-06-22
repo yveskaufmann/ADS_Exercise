@@ -14,12 +14,6 @@
  */
 
 #include "node.h"
-/**
- * This global value is provided by <errno.h> and contains
- * the error number of the last occurred error. This
- * value is used for determining the error message of a occured error.
- */
-extern errno;
 
 /**
  * Struct for single linked list.
@@ -95,7 +89,7 @@ Node Node_create(void *data, bool isDoupleLinkedNode) {
 		// let's allocate the singly linked node
 		node = malloc(sizeof(struct NodeDoupleLinked));
 		if(node == NULL) {
-			fprintf(stderr, "DoupleLinkedNode creation failed: \"%s\"", strerror(errno));
+			perror("DoupleLinkedNode creation failed");
 			return NULL;
 		}
 		node->isDoupleLinkedNode = true;
@@ -104,7 +98,7 @@ Node Node_create(void *data, bool isDoupleLinkedNode) {
 		// let's allocate the singly linked node
 		node = malloc(sizeof(struct NodeSingleLinked));
 		if(node == NULL) {
-			fprintf(stderr, "SingleLinkedNode creation failed: \"%s\"", strerror(errno));
+			perror("SingleLinkedNode creation failed");
 			return NULL;
 		}
 		node->isDoupleLinkedNode = false;

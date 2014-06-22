@@ -2,6 +2,34 @@
 * Übung 1 - Algorithmen & Daten Strukturen ********
 ***************************************************
 
-Diese Datei wurde beim ersten automatischen Commit zur Initialisierung und
-Bereitstellung weiterer Hilfe fÃ¼r dich erstellt. Du kannst sie gefahrlos lÃ¶schen.
+1. Erarbeitung einer einfach verketteten Liste
+	(a) Erarbeiten Sie sich die notwendige Datenstruktur einer einfach verketteten Liste
+	(b) Zu speichern in unserer Liste sind Studenten mit Vor- und Nachnamen nebst Matrikelnummer
+			und Studiengang. Entwerfen Sie die notwendigen Datentypen und begründen Sie gegebenenfalls
+			Ihre Wahl.
+	(c) Implementieren Sie die notwendigen Datentypen in C unter Verwendung von typedef, struct,
+			enum und den entsprechenden gewählten Datentypen.
 
+2. Funktionalität zur Verarbeitung von Elementen einer einfach verketteten Liste
+	(a) Implementieren Sie eine Funktion zum Erstellen eines neuen Elements.
+	(b) Implementieren Sie eine Funktion zum Hinzufügen eines Elements vor dem ersten Element.
+	(c) Implementieren Sie eine Funktion zum Hinzufügen eines Elements nach dem letzten Element.
+	(d) Implementieren Sie eine Funktion zur Ausgabe eines Elements der Liste.
+	(e) Implementieren Sie eine Funktion zur Ausgabe der gesamten Liste.
+	(f) Implementieren Sie eine Funktion zur Ausgabe der Anzahl der Elemente.
+	(g) Implementieren Sie eine Funktion zum Löschen eines Elements.
+	(h) Implementieren Sie eine Funktion zum Löschen der gesamten Liste.
+	(i) Implementieren Sie Funktionalität zum Suchen eines oder mehrerer Studenten nach Vor- und
+			Nachname, Matrikelnummer und Studiengang.
+	(j) Implementieren Sie Funktionalität zum Sortieren der Datensätze der Studenten, Matrikelnummer
+			und Studiengang nach zwei selbstgewählten Sortierverfahren.
+
+3. Einige Methoden obiger einfach verketteter Liste lassen sich (im Gegensatz zum Array oder einer
+	doppelt verketteten Liste) effizient (in unterschiedlicher Hinsicht) implementieren, andere
+	nicht unbedingt - welche sind das und warum?
+
+4. Implementieren Sie obige Datenstruktur und 4 der oben genannten Funktionalitäten (möglichst
+laufzeiteffizienter) als doppelt verkettete Liste.
+
+5. Analysieren Sie die Komplexität der von ihnen implementierten Sortierverfahren allgemein und
+im speziellen Fall Ihrer Implementierung.

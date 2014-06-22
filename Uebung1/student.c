@@ -10,17 +10,21 @@
 */
 
 /**
+ * Provides a replacement implementation of the function strncasecmp
+ * because this function is not provided by the gcc on a windows based work station.
+ */
+#if defined(_WIN32) || defined(_WIN64)
+	#undef 	__STRICT_ANSI__
+	#include <string.h>
+
+	#define strncasecmp _strnicmp
+#endif
+
+/**
  * @def Computes the maximum of \a X and \a Y.
  */
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 #include "student.h"
-
-/**
- * This global value is provided by <errno.h> and contains
- * the error number of the last occurred error. This
- * value is used for determining the error message of a occured error.
- */
-extern int errno;
 
 /**
  * The struct for the student data structure.
@@ -67,7 +71,7 @@ char* createStringClone(const char* str) {
 	int strLen = strlen(str);
 	char* strClone = (char *) malloc((strLen + 1) * sizeof(char));
 	if(strClone == NULL) {
-		fprintf(stderr, "String clone failed: \"%s\"", strerror(errno));
+		perror("String clone failed");
 		return NULL;
 	}
 
@@ -121,7 +125,7 @@ Student Student_create(char *firstName, char *sureName, char *courseName,
 
 	Student student = malloc(sizeof(struct Student));
 	if(student == NULL) {
-		fprintf(stderr, "Student creation failed: \"%s\"", strerror(errno));
+		perror("Student creation failed");
 		return NULL;
 	}
 

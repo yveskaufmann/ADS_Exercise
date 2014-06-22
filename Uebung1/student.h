@@ -21,12 +21,10 @@
 #ifndef _STUDENT_H_
 #define _STUDENT_H_
 
-#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <string.h>
-#include <strings.h>
 #include <math.h>
 
 #include "list.h"
