@@ -246,7 +246,7 @@ int Student_DefaultSortComperator(Node firstNode, Node secondNode) {
 
 void Student_print(Student student) {
 	if(!student) return;
-	printf("%-10s %-10s  %-20s  s0%-10d",student->firstName, student->sureName,student->courseName,student->matriculationNumber);
+	printf("%-15s %-15s  %-20s  s0%-10d",student->firstName, student->sureName,student->courseName,student->matriculationNumber);
 	printf("\n");
 
 }
@@ -254,7 +254,7 @@ void Student_print(Student student) {
 void Student_printAll(List studentList) {
 	if(!studentList) return;
 	printf("Count of students: %d\n", List_getSize(studentList));
-	printf("%-10s %-10s  %-20s  %-12s\n","First-Name", "Sure-Name", "Course-Name", "Matriculation-Number");
+	printf("%-15s %-15s  %-20s  %-12s\n","First-Name", "Sure-Name", "Course-Name", "Matriculation-Number");
 	printf("\n");
 	List_ForEach(studentList, Student_PrintHandler, NULL);
 }
