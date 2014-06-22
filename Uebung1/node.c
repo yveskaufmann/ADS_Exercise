@@ -25,6 +25,7 @@ extern errno;
  * Struct for single linked list.
  */
 struct NodeSingleLinked {
+
 	/**
 	 * A boolean value which lets you know that this node is a single linked node
 	 * if the value is false.
@@ -33,10 +34,14 @@ struct NodeSingleLinked {
 	 * node in order to determine the type of a specified node.
 	 */
 	bool isDoupleLinkedNode;
+
 	/**
 	 * The data pointer which points to the the data of this node.
+	 * This is implemented as void pointer in order to support differnt
+	 * types.
 	 */
 	void *data;
+
 	/**
 	 * The node handle of the next node of this node.
 	 *
@@ -50,6 +55,7 @@ struct NodeSingleLinked {
  * Struct for double linked list.
  */
 struct NodeDoupleLinked {
+
 	/**
 	 * A boolean value which lets you know that this node is a double linked node
 	 * if the value is true.
@@ -58,10 +64,14 @@ struct NodeDoupleLinked {
 	 * node in order to determine the type of a specified node.
 	 */
 	bool isDoupleLinkedNode;
+
 	/**
 	 * The data pointer which points to the the data of this node.
+	 * This is implemented as void pointer in order to support differnt
+	 * types.
 	 */
 	void *data;
+
 	/**
 	 * The node handle of the next node of this node.
 	 *
@@ -69,6 +79,7 @@ struct NodeDoupleLinked {
 	 * that this node doesn't have a successor.
 	 */
 	Node next;
+
 	/**
 	 * The node handle of the previouse node of this node.
 	 *

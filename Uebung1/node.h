@@ -96,6 +96,7 @@ typedef int (*NodeComperator) (Node prevNode, Node nextNode);
  * the function ::Node_destroy.
  *
  * @param[in] data 					A pointer to the data which should stored inside the node.
+ * 									The data attribute is a void pointer in order to support differnt types.
  * @param[in] isDoupleLinkedNode	A flag which determines if a double or single linked node should be creeated.
  * @return The successfully new created node or NULL if the creation failed.
  */
@@ -118,7 +119,8 @@ bool Node_destroy(Node node, NodeHandler dataDestroyHandler);
 
 /**
  * Accessor function which returns the data pointer
- * of a specified node.
+ * of a specified node. The data attribute
+ * is a void pointer in order to support differnt types.
  *
  * @param[in] 	node The specified node.
  * @return 	The data pointer of the specified node.
@@ -131,6 +133,7 @@ void* Node_getData(Node node);
  *
  * @param[in] node	The specified node which should obtain the data pointer.
  * @param[in] data	The data pointer which should stored inside the specified node.
+ * 					The data attribute is a void pointer in order to support differnt types.
  */
 void Node_setData(Node node, void *data);
 

@@ -15,25 +15,30 @@
  * Struct of the list data structure.
  */
 struct List {
+
 	/**
 	 * The handle of the first node of this list.
 	 * The value NULL signals the list is empty.
 	 */
 	Node root;
+
 	/**
 	 * The handle of the last node of this list.
 	 * The value NULL signals the list is empty.
 	 */
 	Node head;
+
 	/**
 	 * The optional assigned destroyHandler which should
 	 * be used for node deallocation inside this list.
 	 */
 	NodeHandler destroyDataHandler;
+
 	/**
 	 * The count of nodes in the list.
 	 */
 	size_t elementCount;
+
 	/**
 	 * A flag which indicates that this list is a douple linked list (in the case of true)
 	 * or a single linked list in the case of false.

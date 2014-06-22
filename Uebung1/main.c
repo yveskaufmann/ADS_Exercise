@@ -1,11 +1,20 @@
 /**
-
- Project: List
- File: main.c
- Purpose:
-
- @author fxdapokalypse
- @version 1.0 09.04.2014
+ * This file contains a simple console application
+ * which demonstrates the usage of the list data structure.
+ *
+ * In this example the List stores some students and the application
+ * provides following options:
+ *
+ *	- create new students and inserts the into the list
+ *	- remove students from the list
+ *	- find a students by a various criterias
+ *	- print the list of students to the stdout
+ *	- sort the list of students by course and matriculation name in
+ *	  ascending and descending sort order.
+ *
+ * @file main.c
+ * @author Yves Kaufmann
+ * @date 12 Jun 2014
  */
 
 #include <limits.h>
@@ -35,21 +44,51 @@
 #define STUDENT_INSERT_START 's'
 #define STUDENT_INSERT_END 'e'
 
+/**
+ * Creates a sample list which contains some sample students.
+ *
+ * @return the new created list with sample students.
+ */
 static
-List createSampleStudentList();
+List createsSampleStudentList();
 
+/**
+ * Call the menu for creation and inserting of
+ * a new student into a specified list.
+ *
+ * @param[in] list The list which should obtain the new student.
+ */
 static
 void addStudent(List list);
 
+/**
+ * Call the menu for deletion of student
+ * inside the specified list.
+ *
+ * @param[in] list The list which contains the to be remove student.
+ */
 static
 void removeStudent(List list);
 
+/**
+ * Call the menu for filtering of students
+ * inside the specified list.
+ *
+ * @param[in] list The list which contains the students which should be filtered.
+ */
 static
 void filterStudent(List list);
 
+/**
+ * The main entry point of the demonstatron application.
+ *
+ * @param argc An integer argument count of the command line arguments.
+ * @param argv An argument vector of the command line arguments.
+ * @return  An integer 0 upon exit success.s
+ */
 int main(int argc, char **argv) {
 	char cmd = '?';
-	List students = createSampleStudentList();
+	List students = createsSampleStudentList();
 	for(;;) {
 		switch(cmd) {
 			case MAIN_CMD:
@@ -116,17 +155,20 @@ int main(int argc, char **argv) {
 }
 
 static
-List createSampleStudentList() {
+List createsSampleStudentList() {
 	List list = List_create(true, Student_DestroyHandler);
+	List_addFirst(list,Student_create("Yves", "Kaufmann", "AS", 544361));
+	List_addFirst(list,Student_create("Student", "A", "BWL", 1324243));
+	List_addFirst(list,Student_create("Student", "B", "Math", 564631));
+	List_addFirst(list,Student_create("Student", "C", "Histroy", 979696));
 
-	List_addFirst(list,Student_create("Yves", "Kaufmann", "Algorithmen", 544361));
-	List_addLast(list, Student_create("Ksenia", "Mbjorova", "BWL", 52135));
-	List_addLast(list, Student_create("Ksenia", "Majorova", "BWL", 5134));
-	List_addLast(list, Student_create("Ksenia", "Majordva", "BWL", 534));
-	List_addLast(list, Student_create("Ksenia", "Majdrova", "BWL", 5443));
-	List_addFirst(list, Student_create("Ksenia", "Mbjorova", "BWL", 52));
-	List_addLast(list, Student_create("Marcus", "bla", "Algorithmen", 544366));
-	List_addLast(list, Student_create("ABA", "XMK", "Algorithmen", 544367));
+	List_addLast(list, Student_create("Marty", "McFly", "Time Traveling", 52135));
+	List_addLast(list, Student_create("Dr. Emmett", "Brown", "Time Traveling", 5134));
+	List_addLast(list, Student_create("Biff", "Tannen", "Time Traveling", 534));
+	List_addFirst(list,Student_create("Dr. Peter", "Venkman", "Parapsychology", 542123));
+	List_addLast(list, Student_create("Dr. Egon", "Spengler", "Parapsychology", 544366));
+	List_addLast(list, Student_create("Dr. Raymond", "Stantz", "Parapsychology", 244366));
+
 
 	return list;
 }
