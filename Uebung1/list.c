@@ -1,5 +1,8 @@
 /**
  * The default implementation of single and double linked list.
+ * This list implemenations is generic which means the
+ * implementation for single and douple linked list is the same
+ * hence exists some section in the code which only handle a single linked list.
  *
  * @file list.c
  * @author Yves Kaufmann
@@ -115,6 +118,7 @@ Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirecti
 
 	if(position == NULL) return NULL;
 
+	// inserts the newNode in the front of position.
 	if(dir == AFTER) {
 
 		Node oldNextNode = Node_getNext(position);
@@ -132,6 +136,7 @@ Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirecti
 		}
 	}
 
+	// inserts the newNode in after position.
 	if(dir == BEFORE) {
 
 		Node oldPrevNode = list->isDoupleLinkedList ? Node_getPrev(position) : getPrevNode(list->root, position);
@@ -316,6 +321,12 @@ Node List_findNode(List list, NodeHandler filter, void *filterCriteria) {
 }
 
 List List_findAllNodes(List list, NodeHandler filter, void *filterCriteria) {
+	/**
+	 * The filteredNodes list contains direct references (handles) to the nodes
+	 * of "list" hence a destroyHandler should not provided to the filteredNodes list.
+	 * Otherwise this could lead to a invalid state of the list, which means a node
+	 * of "list" could be accidentally deleted and this could lead to segmentation fault faulures.
+	 */
 	List filteredNodes = List_create(false, NULL);
 	if(filteredNodes == NULL) {
 		return NULL;
@@ -360,7 +371,19 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
-
+	/**
+	 * Merged the two splited lists in to one list the
+	 * merging works the follwing the most left node of both lists will be
+	 * compared and the node with the smallest order number will be removed
+	 * from his list and inserted into the new list. This procedure is repeaded until
+	 * one list is empty. After this the remaining nodes in the other list will be removed from
+	 * his list and added to the new list.
+	 *
+	 *
+	 * @param[in] left 	A pointer to the left list.
+	 * @param[in] right A pointer to the right list.
+	 * @return A pointer to new allocated list which contains the nodes of left and right.
+	 */
 	List merge(struct List *left, struct List *right) {
 		Node node = NULL;
 
@@ -393,12 +416,22 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 
 		return newList;
 	} 
-		
+
+	/**
+	 * Sorts the specified list by splitting the list in to two
+	 * sub lists and sorts these sub lists by a recursively calling sort and
+	 * then merged into a single list by using the merge algorithm described
+	 * in the function merge.
+	 *
+	 * @param[in] _list 	The list which should sorted.
+	 * @return	The sorted sub list.
+	 */
 	List sort(List _list) {
 		if(_list->elementCount <= 1 || _list == NULL) {
 			return _list;
 		}
 		
+		// Starts the splitting of the _list into the two lists left and right.
 		int mid = (_list->elementCount / 2);
 		Node midNode = List_getNode(_list, mid);
 		
@@ -420,20 +453,24 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 		if(_list->isDoupleLinkedList) {
 			Node_setPrev(right.root, NULL);
 		}
-
+		// The end of the list splitting
 		
+
 		List lSorted = sort(&left);
 		List rSorted = sort(&right);
 		List result = merge(lSorted, rSorted);
 		
+		// Ensures that only allocated memory is deallocated
 		if(lSorted != NULL && lSorted != &left) {
 			free(lSorted);
 		}
-			
+
+		// Ensures that only allocated memory is deallocated
 		if(rSorted != NULL && rSorted != &right) {
 			free(rSorted);
 		}
 
+		// The abort condition when a error occurred in the merge function.
 		if(lSorted == NULL || rSorted == NULL) {
 			return NULL;
 		}
