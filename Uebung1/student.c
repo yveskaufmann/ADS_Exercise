@@ -11,14 +11,32 @@
 
 /**
  * Provides a replacement implementation of the function strncasecmp
- * because this function is not provided by the gcc on a windows based work station.
+ * because this function is not provided by the gcc compiler.
  */
-#if defined(_WIN32) || defined(_WIN64)
-	#undef 	__STRICT_ANSI__
-	#include <string.h>
+#ifndef strncasecmp
+#include <ctype.h>
+#include <stddef.h>
+#include <string.h>
+static
+int strncasecmp (const char *s1, const char *s2, size_t n) {
+	int cmp = 0;
+	char ch1;
+	char ch2;
+	for(int i = 0; i < n && cmp == 0; i++) {
 
-	#define strncasecmp _strnicmp
+		if(s1[i] == '\0' || s2[i] == '\0') {
+			cmp = strncmp(s1 + i, s2 + i, 1);
+			break;
+		}
+
+		ch1 = isupper(s1[i]) ? tolower(s1[i]) : s1[i];
+		ch2 = isupper(s2[i]) ? tolower(s2[i]) : s2[i];
+		cmp = strncmp(&ch1, &ch2, 1);
+	}
+	return cmp;
+}
 #endif
+
 
 /**
  * @def Computes the maximum of \a X and \a Y.

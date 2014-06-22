@@ -77,7 +77,7 @@ Node getPrevNode(Node rootNode, Node node) {
 List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
 	List list = (List) malloc(sizeof(struct List));
 	if(list == NULL) {
-		fprintf(stderr, "List creation failed: \"%s\"", strerror(errno));
+		perror("List creation failed");
 		return NULL;
 	}
 
@@ -394,7 +394,7 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 
 		List newList = List_create(list->isDoupleLinkedList, list->destroyDataHandler);
 		if(newList == NULL) {
-			fprintf(stderr, "List mergSort: list creation failed: \"%s\"", strerror(errno));
+			perror("List mergSort: list creation failed");
 			return NULL;
 		}
 		
