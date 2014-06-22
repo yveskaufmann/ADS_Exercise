@@ -39,12 +39,12 @@ void Student_setCoursName(Student student, const char *courseName);
 int Student_getMatriculationNumber(Student student);
 void Student_setMatriculationNumber(Student student, int matriculationNumber);
 
-bool Student_DestroyHandler(NodePtr node, size_t index, void *data);
-bool Student_PrintHandler(NodePtr node, size_t index, void *data);
+bool Student_DestroyHandler(Node node, size_t index, void *data);
+bool Student_PrintHandler(Node node, size_t index, void *data);
 
-int Student_CourseComperator(NodePtr firstNode, NodePtr secondNode);
-int Student_MarticelNrComperator(NodePtr firstNode, NodePtr secondNode);
-int Student_DefaultSortComperator(NodePtr firstNode, NodePtr secondNode);
+int Student_CourseComperator(Node firstNode, Node secondNode);
+int Student_MarticelNrComperator(Node firstNode, Node secondNode);
+int Student_DefaultSortComperator(Node firstNode, Node secondNode);
 
 void Student_print(Student student);
 void Student_printAll(List students);

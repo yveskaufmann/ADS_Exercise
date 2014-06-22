@@ -20,24 +20,24 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct NodeDoupleLinked* NodePtr;
-typedef bool (*NodeHandler) (NodePtr node, size_t index, void *data);
-typedef int (*NodeComperator) (NodePtr prevNode, NodePtr nextNode);
+typedef struct NodeDoupleLinked* Node;
+typedef bool (*NodeHandler) (Node node, size_t index, void *data);
+typedef int (*NodeComperator) (Node prevNode, Node nextNode);
 
-NodePtr Node_create(void *data, bool isDoupleLinkedNode);
-bool Node_destroy(NodePtr node, NodeHandler dataDestroyHandler);
+Node Node_create(void *data, bool isDoupleLinkedNode);
+bool Node_destroy(Node node, NodeHandler dataDestroyHandler);
 
-void* Node_getData(NodePtr node);
-void Node_setData(NodePtr node, void *data);
+void* Node_getData(Node node);
+void Node_setData(Node node, void *data);
 
-NodePtr Node_getNext(NodePtr node);
-void Node_setNext(NodePtr node, NodePtr next);
+Node Node_getNext(Node node);
+void Node_setNext(Node node, Node next);
 
-NodePtr Node_getPrev(NodePtr node);
-void Node_setPrev(NodePtr node, NodePtr prev);
+Node Node_getPrev(Node node);
+void Node_setPrev(Node node, Node prev);
 
-bool Node_isDoupleLinkedNode(NodePtr node);
+bool Node_isDoupleLinkedNode(Node node);
 
-void Node_swapNodes(NodePtr firstNode, NodePtr secondNode);
+void Node_swapNodes(Node firstNode, Node secondNode);
 
 #endif /* NODE_H_ */

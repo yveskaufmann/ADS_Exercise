@@ -15,18 +15,18 @@ extern errno;
 struct NodeSingleLinked {
 	bool isDoupleLinkedNode;
 	void *data;
-	NodePtr next;
+	Node next;
 }; 
 
 struct NodeDoupleLinked {
 	bool isDoupleLinkedNode;
 	void *data;
-	NodePtr next;
-	NodePtr prev;
+	Node next;
+	Node prev;
 };
 
-NodePtr Node_create(void *data, bool isDoupleLinkedNode) {
-	NodePtr node = NULL;
+Node Node_create(void *data, bool isDoupleLinkedNode) {
+	Node node = NULL;
 	if(isDoupleLinkedNode) {
 		node = malloc(sizeof(struct NodeDoupleLinked));
 		if(node == NULL) {
@@ -48,7 +48,7 @@ NodePtr Node_create(void *data, bool isDoupleLinkedNode) {
 	return node;
 }
 
-bool Node_destroy(NodePtr node, NodeHandler dataDestroyHandler) {
+bool Node_destroy(Node node, NodeHandler dataDestroyHandler) {
 	if(!node) return false;
 
 	if(dataDestroyHandler != NULL) {
@@ -59,35 +59,35 @@ bool Node_destroy(NodePtr node, NodeHandler dataDestroyHandler) {
 	return true;
 }
 
-void* Node_getData(NodePtr node) {
+void* Node_getData(Node node) {
 	return node->data;
 }
-void Node_setData(NodePtr node, void *data) {
+void Node_setData(Node node, void *data) {
 	node->data = data;
 }
 
-NodePtr Node_getNext(NodePtr node) {
+Node Node_getNext(Node node) {
 	return node->next;
 }
-void Node_setNext(NodePtr node, NodePtr next) {
+void Node_setNext(Node node, Node next) {
 	node->next = next;
 }
 
-NodePtr Node_getPrev(NodePtr node) {
+Node Node_getPrev(Node node) {
 	assert(Node_isDoupleLinkedNode(node));
 	return node->prev;
 }
 
-void Node_setPrev(NodePtr node, NodePtr prev) {
+void Node_setPrev(Node node, Node prev) {
 	assert(Node_isDoupleLinkedNode(node));
 	node->prev = prev;
 }
 
-bool Node_isDoupleLinkedNode(NodePtr node) {
+bool Node_isDoupleLinkedNode(Node node) {
 	return node->isDoupleLinkedNode;
 }
 
-void Node_swapNodes(NodePtr firstNode, NodePtr secondNode) {
+void Node_swapNodes(Node firstNode, Node secondNode) {
 
 	if(!firstNode || !secondNode || firstNode == secondNode) {
 		return;

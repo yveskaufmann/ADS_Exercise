@@ -135,14 +135,14 @@ void Student_setMatriculationNumber(Student student, int matriculationNumber) {
 //----------------------------------------------------------------------------
 
 
-bool Student_DestroyHandler(NodePtr node, size_t index, void *data) {
+bool Student_DestroyHandler(Node node, size_t index, void *data) {
 	if(node) {
 		Student_destroy(Node_getData(node));
 	}
 	return true;
 }
 
-bool Student_PrintHandler(NodePtr node, size_t index, void *data) {
+bool Student_PrintHandler(Node node, size_t index, void *data) {
 	if(node) {
 		Student_print(Node_getData(node));
 	}
@@ -153,7 +153,7 @@ bool Student_PrintHandler(NodePtr node, size_t index, void *data) {
 // DATA STRACTURE NodeComperators
 //----------------------------------------------------------------------------
 
-int Student_CourseComperator(NodePtr firstNode, NodePtr secondNode) {
+int Student_CourseComperator(Node firstNode, Node secondNode) {
 
 	const char *firstCourse = Student_getCourseName(Node_getData(firstNode));
 	const char *secondCourse = Student_getCourseName(Node_getData(secondNode));
@@ -165,7 +165,7 @@ int Student_CourseComperator(NodePtr firstNode, NodePtr secondNode) {
 
 };
 
-int Student_MarticelNrComperator(NodePtr firstNode, NodePtr secondNode) {
+int Student_MarticelNrComperator(Node firstNode, Node secondNode) {
 
 	int firstMatricleNr = Student_getMatriculationNumber(Node_getData(firstNode));
 	int secondMatricleNr  = Student_getMatriculationNumber(Node_getData(secondNode));
@@ -175,7 +175,7 @@ int Student_MarticelNrComperator(NodePtr firstNode, NodePtr secondNode) {
 
 
 
-int Student_DefaultSortComperator(NodePtr firstNode, NodePtr secondNode) {
+int Student_DefaultSortComperator(Node firstNode, Node secondNode) {
 	int cmpCourseName =  Student_CourseComperator(firstNode, secondNode);
 	return (cmpCourseName != 0) ?  cmpCourseName : Student_MarticelNrComperator(firstNode, secondNode);
 };
@@ -213,7 +213,7 @@ bool testIfStringMatches(const char* str, const char* strOther) {
 }
 
 List Student_findAllByFirstName(List list, const char* firstName) {
-	bool filterNodes(NodePtr node, size_t index, void *data) {
+	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		return testIfStringMatches(data,Student_getFirstName(student));
 	}
@@ -221,7 +221,7 @@ List Student_findAllByFirstName(List list, const char* firstName) {
 }
 
 List Student_findAllBySureName(List list, const char* sureName) {
-	bool filterNodes(NodePtr node, size_t index, void *data) {
+	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		return testIfStringMatches(data,Student_getSureName(student));
 	}
@@ -229,7 +229,7 @@ List Student_findAllBySureName(List list, const char* sureName) {
 }
 
 List Student_findAllByCourseName(List list, const char* courseName) {
-	bool filterNodes(NodePtr node, size_t index, void *data) {
+	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		return testIfStringMatches(data,Student_getCourseName(student));
 	}
@@ -240,7 +240,7 @@ List Student_findAllByMatriculationNumber(List list,int matriculationNumber) {
 
 	int countOfDigitsDesiredMtr = log(matriculationNumber) / log(10);
 
-	bool filterNodes(NodePtr node, size_t index, void *data) {
+	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		int currentMtrNumber = Student_getMatriculationNumber(student);
 		int countOfDigtsCurrentMtr = log(currentMtrNumber) / log(10);
