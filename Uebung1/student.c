@@ -50,6 +50,16 @@ struct Student {
 // Helper functions
 //----------------------------------------------------------------------------
 
+/**
+ * Creates a clone of specified null terminated string
+ * and returns the pointer of the new created clone.
+ *
+ * The caller of this function is responsible to deallocate the
+ * copied string by him self.
+ *
+ * @param[in] str	The null terminated string which should be duplicated.
+ * @return	The pointer to the new created string copy.
+ */
 static
 char* createStringClone(const char* str) {
 	if(str == NULL) return NULL;
@@ -67,13 +77,37 @@ char* createStringClone(const char* str) {
 	return strClone;
 }
 
-
+/**
+ * Helper function which set the a new value to a string attribute of a ::Student.
+ * This helper ensures that the old value of string attrbute is deallocated before
+ * the new value is set.
+ *
+ * @param[in] oldString	The old string of the String attribute which should changed.
+ * @param[in] newStr	The new string of the String attribute which should changed.
+ */
 static
 void handleNewStringSetter(char **oldString, const char* newStr) {
 	if(*oldString != NULL) { 
 		free(*oldString);
 	}
 	*oldString = createStringClone(newStr == NULL ? " " : newStr);
+}
+
+/**
+ * Helper function which performs a string comparison which
+ * checks if \a str startsWith \a strOther. This function
+ * ignores the case of the strings.
+ *
+ * @param[in] str		A null terminated string.
+ * @param[in] strOther	A null terminated string.
+ * @return True if \a str startsWith \a strOther.
+ */
+static
+bool testIfStringMatches(const char* str, const char* strOther) {
+	int lenStr = strlen(str);
+	int lenStrOther = strlen(strOther);
+
+	return 0 == strncasecmp(str, strOther, MIN(lenStr, lenStrOther));
 }
 
 //----------------------------------------------------------------------------
@@ -228,14 +262,6 @@ void Student_printAll(List studentList) {
 //----------------------------------------------------------------------------
 // DATA STRACTURE find
 //----------------------------------------------------------------------------
-
-static
-bool testIfStringMatches(const char* str, const char* strOther) {
-	int lenStr = strlen(str);
-	int lenStrOther = strlen(strOther);
-
-	return 0 == strncasecmp(str, strOther, MIN(lenStr, lenStrOther));
-}
 
 List Student_findAllByFirstName(List list, const char* firstName) {
 	bool filterNodes(Node node, size_t index, void *data) {
