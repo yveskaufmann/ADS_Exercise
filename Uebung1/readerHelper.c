@@ -1,12 +1,12 @@
 /**
-	
-	Project: List
-	File: readerHelper.c
-	Purpose: 
-
-	@author fxdapokalypse
-	@version 1.0 10.06.2014
-*/
+ * This file contains the implementation of helper function
+ * for reading from the stdin especially for reading
+ * the user input inside a terminal.
+ *
+ * @file readerHelper.c
+ * @author Yves Kaufmann
+ * @date 12 Jun 2014
+ */
 
 #include "readerHelper.h"
 
