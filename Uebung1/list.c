@@ -87,8 +87,7 @@ bool List_addFirst(List list, void *data) {
 	if(newNode == NULL) {
 		return false;
 	}
-	List_insertNodeAt(list,newNode, list->root, BEFORE);
-	return true;
+	return List_insertNodeAt(list,newNode, list->root, BEFORE) == newNode;
 }
 
 bool List_addLast(List list, void *data) {
@@ -96,8 +95,7 @@ bool List_addLast(List list, void *data) {
 	if(newNode == NULL) {
 		return false;
 	}
-	List_insertNodeAt(list,newNode, list->head, AFTER);
-	return true;
+	return List_insertNodeAt(list,newNode, list->head, AFTER) == newNode;
 }
 
 
