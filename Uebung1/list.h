@@ -35,7 +35,7 @@
  * The handle is implemented as incomplete type which means
  * the user of this interface could not use the type List
  * as pointer. Hence a user of the list have to use
- * type 'List' only as handle to specific list.
+ * type 'List' only as handle of aspecific list.
  *
  */
 typedef struct List* List;
@@ -74,7 +74,7 @@ typedef enum {
  * of the data attribute of a node.
  *
  * The caller of constructor function responsible to deallocate the new list by
- * using List_destroy.
+ * using ::List_destroy.
  *
  * @param[in] isDoubleLinkedList	A flag which determines if a double linked list should be created or a single linked list.
  * @param[in] destroyHandler 		A opional NodeHandler which is reponsible for deallocating

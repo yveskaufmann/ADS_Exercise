@@ -9,15 +9,40 @@
 	@version 1.0 09.04.2014
 */
 
+/**
+ * @def Computes the maximum of \a X and \a Y.
+ */
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 #include "student.h"
 
+/**
+ * This global value is provided by <errno.h> and contains
+ * the error number of the last occurred error. This
+ * value is used for determining the error message of a occured error.
+ */
 extern int errno;
 
+/**
+ * The struct for the student data structure.
+ */
 struct Student {
+
+	/**
+	 * The first name of a student as null terminated string.
+	 */
 	char *firstName;
+
+	/**
+	 * The sure name of a student as null terminated string.
+	 */
 	char *sureName;
+	/**
+	 * The coure name of student as null terminated string.
+	 */
 	char *courseName;
+	/**
+	 * The matriculation number of a student as integer value.
+	 */
 	int matriculationNumber;
 };
 

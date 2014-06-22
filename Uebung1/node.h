@@ -92,6 +92,9 @@ typedef int (*NodeComperator) (Node prevNode, Node nextNode);
  * the heap or be in a higher scope in order to access the data
  * in the outside function.
  *
+ * A caller is reponsible to deallocate the created Node by him self with
+ * the function ::Node_destroy.
+ *
  * @param[in] data 					A pointer to the data which should stored inside the node.
  * @param[in] isDoupleLinkedNode	A flag which determines if a double or single linked node should be creeated.
  * @return The successfully new created node or NULL if the creation failed.
@@ -117,7 +120,7 @@ bool Node_destroy(Node node, NodeHandler dataDestroyHandler);
  * Accessor function which returns the data pointer
  * of a specified node.
  *
- * @param[in] 	node The data pointer of a specified node.
+ * @param[in] 	node The specified node.
  * @return 	The data pointer of the specified node.
  */
 void* Node_getData(Node node);
