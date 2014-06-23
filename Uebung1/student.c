@@ -321,6 +321,8 @@ List Student_findAllByMatriculationNumber(List list,int matriculationNumber) {
 		if(countOfDigitsOfDesiredMtr > countOfDigits) return false;
 		if(countOfDigitsOfDesiredMtr == countOfDigits) return matriculationNumber == mtrNumber;
 
+		// lets compare the number only the left most digits which are fit into
+		// the desired mtrNumber.
 		return ((int)( mtrNumber / pow(10, countOfDigits - countOfDigitsOfDesiredMtr))) == matriculationNumber;
 	}
 
