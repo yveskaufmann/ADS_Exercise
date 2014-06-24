@@ -1,13 +1,12 @@
 /**
-	
+ * This file contains the implementation of the data structure
+ * of a student.
+ *
+ * @file student.h
+ * @author Yves Kaufmann
+ * @date 12 Jun 2014
+ */
 
-	Project: List
-	File: student.c
-	Purpose: 
-
-	@author fxdapokalypse
-	@version 1.0 09.04.2014
-*/
 
 /**
  * Provides a replacement implementation of the function strncasecmp
