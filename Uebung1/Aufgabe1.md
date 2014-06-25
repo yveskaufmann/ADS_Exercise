@@ -129,7 +129,6 @@ an einen `destroyDataHandler` delegieren.
 	  | bool isDoupleLinkedList       |
        --------------------------------
 
-
 Für mehr informationen Sie die mit DoxyGen generierte Dokumentation.
 	 		
 Implementieren Sie die notwendigen Datentypen in C unter Verwendung von typedef, struct, enum und den entsprechenden gewählten Datentypen.
@@ -143,11 +142,13 @@ Siehe die Implementierung der Liste bzw die Doxygen Kommentare.
 	
 ##3. Einige Methoden obiger einfach verketteter Liste lassen sich (im Gegensatz zum Array oder einer doppelt verketteten Liste) effizient (in unterschiedlicher Hinsicht) implementieren, andere  nicht unbedingt - welche sind das und warum?
 
-Bevor ich auf die Methoden eingehe die sich effektiver implementieren lassen möchte ich auf die Markanten Unterschieder einer Liste und einem Array hinweisen.
+- Erstellen eines neuen Elements
 
-Das erstellen eines Elements, welches ich an dieser Steller als das Hinzufügen eines neuen Datensatzes interpretiere l
+Das erstellen eines Elements, welches ich an dieser Steller als das Hinzufügen eines neuen Datensatzes zur Liste interpretiere, ist im gegensatz zu einem Array in Konstanter Zeit möglich sofern alle erforderlichen Informationen bereits bekannt sind. Da der Knoten in diesem Fall nur vor bzw. hinter einem referenz Knoten eingehangen werden muss. Wenn nicht vorhanden muss dieser referenz Knoten über Iteration erst ermittelt 
+werden
 
-  
+
+
 
 ##4. Implementieren Sie obige Datenstruktur und 4 der oben genannten Funktionalitäten (möglichst laufzeiteffizienter) als doppelt verkettete Liste.
 
@@ -157,5 +158,4 @@ Ist dies bereits implementiert wurden.
  
 Für weitere Informationen siehe die Implementierung der Liste bzw die Doxygen Kommentare. 
 
-##5. Analysieren Sie die Komplexität der von ihnen implementierten Sortierverfahren allgemein und
-im speziellen Fall Ihrer Implementierung.
+##5. Analysieren Sie die Komplexität der von ihnen implementierten Sortierverfahren allgemein und im speziellen Fall Ihrer Implementierung.
