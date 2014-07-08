@@ -42,7 +42,7 @@ typedef struct List* Stack;
  * Creates a empty stack and specifies a optional destroyHandler
  * which should deallocate the memory of the elements in the stack.
  *
- * The caller of constructor function responsible to deallocate the new stack by
+ * The caller of the constructor function is responsible to deallocate the new stack by
  * using ::Stack_destroy.
  *
  * @param[in] destroyHandler 		A opional NodeHandler which is reponsible for deallocating
@@ -73,17 +73,19 @@ int Stack_getSize(Stack stack);
  * Inserts a specified data element on top of a specified stack.
  *
  * @param[in] stack The specified stack which should be expanded by the element data.
- * @param[in] data The new data element which should inserted into the stack.
+ * @param[in] data The new data element which should be inserted into the stack.
  */
 void Stack_push(Stack stack, void* data);
 
 /**
  * Removes and return the data element which lies on top of the stack.
  *
+ * The caller of this function is responsible for deallocating
+ * the returned data element by him self if the data element was allocated on the heap.
+ *
  * @param[in] stack The specified stack which should contains the data element which should be removed.
- * @return the remove data element or null if the stack is empty.
+ * @return the removed data element or null if the stack is empty.
  */
 void* Stack_pop(Stack stack);
 
 #endif /* STACK_H_ */
-s

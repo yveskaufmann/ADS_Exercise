@@ -132,11 +132,14 @@ void pushStudent(Stack stack) {
 
 static
 void popStudent(Stack stack) {
-	void *data = Stack_pop(stack);
-	if(data == NULL) {
+	void *student = Stack_pop(stack);
+	if(student == NULL) {
 		printf("The Stack of students is empty.\n\n");
 		return;
 	}
-	printf("Popped element: %c\n", data);
-	free(data);
+	
+	printf("Popped student: ");
+	Student_print(student);	
+	printf("\n");
+	Student_destroy(student);
 }

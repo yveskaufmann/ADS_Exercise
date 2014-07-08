@@ -3,6 +3,7 @@
 /Default
 /debug
 ./stack
+stack
 *pyc
 *.o
 *.exe
