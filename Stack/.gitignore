@@ -1,12 +1,1 @@
-list
 stack
-
-*.o
-*.exe
-*pyc
-
-/Default
-/doc
-/docu
-/debug
-

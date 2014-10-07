@@ -1,0 +1,9 @@
+*.o
+*.exe
+*pyc
+
+/Default
+/doc
+/debug
+/release
+
