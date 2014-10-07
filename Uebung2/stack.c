@@ -1,32 +1,41 @@
+/**
+ * The default implementation of a stack which uses the single and double linked list implementation.
+ *
+ * @file stack.c
+ * @author Yves Kaufmann
+ * @date 12 Jun 2014
+ */
+
 #include "stack.h"
 
-void Stack_Create(Stack *stack, int maxSize) {
-	stack->content = (StackElement*) malloc( maxSize *  sizeof(StackElement));
-	
-	if (stack->content != NULL)   
-		return;
-	stack->maxSize = maxSize;
-	stack->top = -1;
+
+Stack Stack_create(NodeHandler destroyHandler) {
+	return List_create(false, destroyHandler);
 }
 
-void Stack_Clear(Stack *stack) {
-	free(stack->content);
+void Stack_destroy(Stack stack) {
+	List_destroy(stack);
 }
 
-
-int Stack_push(Stack *stack, StackElement data) {
-	if((stack->top) >= stack->maxSize) {
-		return -1;
-	}
-	
-	stack->content[++stack->top] = data;
-	return 0;
+int Stack_getSize(Stack stack)
+{
+	return List_getSize(stack);
 }
 
-StackElement * Stack_pop(Stack *stack) {
-	if(stack->top <= 0) {
-		return 0;
-	}
-	return &stack->content[stack->top--];
+void Stack_push(Stack stack, void* data) {
+	List_addLast(stack, data);
+}
+
+void* Stack_pop(Stack stack) {
+	int size = List_getSize(stack);
+
+	if(size == 0) return NULL;
+
+	Node node = List_detachNodeAtIndex(stack, size - 1);
+	void* data = Node_getData(node);
+
+	Node_destroy(node, NULL);
+
+	return data;
 }
 

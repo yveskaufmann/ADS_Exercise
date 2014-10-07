@@ -6,24 +6,28 @@
 # 
 
 CC=gcc
-OPTIONS=-g -Wall -std=c99 -pedantic -Winline -x c
+OPTIONS=-g -Wall -std=c99 -Winline -x c 
 DEBUG_OPTIONS= -Oo -fno-inline
 TARGET=stack
+
+
 
 DOC=doxygen
 DOCCONFIG=doxygen.config
 
 MEMCHECKPRGRAM=valgrind 
-MEMCHECKPARAMETERS=--tool=memcheck 
+MEMCHECKPARAMETERS=--tool=memcheck -v 
 
 TESTARGUMENTS=
 
+.c:
+	@echo $*
 
-all: *.c
-	$(CC) $(OPTIONS) main.c stack.c -o $(TARGET) 
+$(TARGET): *.c
+	$(CC) $(OPTIONS) *.c -o $(TARGET) -lm 
 
-doc:	*.c
-	$(DOC) $(DOCCONFIG) $(TARGET)
+doc: *.c
+	$(DOC) $(DOCCONFIG) 
 
 doc-gen-config-file:
 	$(DOC) -g $(DOCCONFIG)
@@ -31,22 +35,18 @@ doc-gen-config-file:
 mem-check:
 	$(MEMCHECKPRGRAM) $(MEMCHECKPARAMETERS) ./$(TARGET) $(TESTARGUMENTS)
 
-format: *.c
-	$(FORMATPROGRAM) $(TARGET)
-
-run:
+run: $(TARGET)
 	./$(TARGET) $(TESTARGUMENTS)
 
 clean:
 	rm -f $(TARGET)
 
 doc-clean:
-	rm -rf latex
-	rm -rf html
+	rm -rf doc 
 
 help:
 	@echo Targets
-	@echo : doc 
+	@echo : doc
 	@echo : doc-gen-config-file 
 	@echo : doc-clean 
 	@echo : mem-check
