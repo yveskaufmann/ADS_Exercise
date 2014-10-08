@@ -24,7 +24,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "list.h"
+#include "../LinkedList/list.h"
 
 /**
  * The handle to a specific Stack which have to be assigned to

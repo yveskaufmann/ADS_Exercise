@@ -5,51 +5,49 @@
 # Author: Yves Kaufmann
 # 
 
-CC=gcc
-OPTIONS=-g -Wall -std=c99 -Winline -x c 
+
+CC= gcc
+CFLAGS= -g -Wall -std=c99 -Winline -x c 
+LDFLAGS=-L ../LinkedList/ -llist
+TARGET= stack
+STATIC_LIB= lib$(TARGET).a
 DEBUG_OPTIONS= -Oo -fno-inline
-TARGET=stack
-
-
+OBJECTS=stack.o \
+		main.o 
 
 DOC=doxygen
 DOCCONFIG=doxygen.config
-
 MEMCHECKPRGRAM=valgrind 
 MEMCHECKPARAMETERS=--tool=memcheck -v 
-
 TESTARGUMENTS=
 
-.c:
-	@echo $*
+all:	clean $(TARGET) $(STATIC_LIB)
 
-$(TARGET): *.c
-	$(CC) $(OPTIONS) *.c -o $(TARGET) -lm 
+.PHONY:	clean all
+clean:
+	rm -f $(TARGET) $(OBJECTS) $(STATIC_LIB)
+	rm -rf doc 
+	
+$(TARGET):	$(OBJECTS)
+	$(MAKE) -C ../LinkedList liblist.a
+	$(CC) -o $(TARGET) $(OBJECTS) $(LDFLAGS)
+	
+$(STATIC_LIB):	$(OBJECTS)
+	ar rcs $@ $^
 
+run: $(TARGET)
+	./$(TARGET) $(TESTARGUMENTS)
+	
 doc: *.c
 	$(DOC) $(DOCCONFIG) 
-
-doc-gen-config-file:
-	$(DOC) -g $(DOCCONFIG)
 
 mem-check:
 	$(MEMCHECKPRGRAM) $(MEMCHECKPARAMETERS) ./$(TARGET) $(TESTARGUMENTS)
 
-run: $(TARGET)
-	./$(TARGET) $(TESTARGUMENTS)
-
-clean:
-	rm -f $(TARGET)
-
-doc-clean:
-	rm -rf doc 
-
 help:
-	@echo Targets
-	@echo : doc
-	@echo : doc-gen-config-file 
-	@echo : doc-clean 
-	@echo : mem-check
-	@echo : clean
-	@echo : run
-	@echo : debug
+	@echo "make                - build all and run"
+	@echo "make $(TARGET)          - build the executable"
+	@echo "make lib$(TARGET).a     - build the static library"
+	@echo "make run            - run $(TARGET)"
+	@echo "make clean          - clean the build directory"
+	@echo "make mem-check      - performs a memory check for memory leak detection"

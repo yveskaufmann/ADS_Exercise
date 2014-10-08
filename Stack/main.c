@@ -20,8 +20,8 @@
 #include <string.h>
 
 #include "stack.h"
-#include "student.h"
-#include "readerHelper.h"
+#include "../LinkedList/student.h"
+#include "../LinkedList/readerHelper.h"
 
 #define MAIN_CMD '?'
 #define ADD_CMD 'a'
