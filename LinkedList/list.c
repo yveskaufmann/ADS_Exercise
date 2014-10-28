@@ -74,8 +74,8 @@ Node getPrevNode(Node rootNode, Node node) {
 	return currentNode;
 }
 
-List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
-	List list = (List) malloc(sizeof(struct List));
+List_t List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
+	List_t list = (List_t) malloc(sizeof(struct List));
 	if(list == NULL) {
 		perror("List creation failed");
 		return NULL;
@@ -90,7 +90,7 @@ List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler) {
 	return list;
 }
 
-bool List_addFirst(List list, void *data) {
+bool List_addFirst(List_t list, void *data) {
 	Node newNode = Node_create(data, list->isDoupleLinkedList);
 	if(newNode == NULL) {
 		return false;
@@ -98,7 +98,7 @@ bool List_addFirst(List list, void *data) {
 	return List_insertNodeAt(list,newNode, list->root, BEFORE) == newNode;
 }
 
-bool List_addLast(List list, void *data) {
+bool List_addLast(List_t list, void *data) {
 	Node newNode = Node_create(data, list->isDoupleLinkedList);
 	if(newNode == NULL) {
 		return false;
@@ -107,7 +107,7 @@ bool List_addLast(List list, void *data) {
 }
 
 
-Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirection dir) {
+Node List_insertNodeAt(List_t list, Node newNode, Node position, NodeInsertDirection dir) {
 
 	if(list == NULL || newNode == NULL  ) {
 		return NULL;
@@ -163,7 +163,7 @@ Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirecti
 	return newNode;
 }
 
-Node List_getNode(List list, int index) {
+Node List_getNode(List_t list, int index) {
 
 	if(!list || !list->root || index < 0 || index >= list->elementCount) {
 		return NULL;
@@ -205,7 +205,7 @@ Node List_getNode(List list, int index) {
 
 }
 
-void List_destroy(List list) {
+void List_destroy(List_t list) {
 
 	if(!list) {
 		return;
@@ -219,7 +219,7 @@ void List_destroy(List list) {
 }
 
 
-void List_ForEach(List list, NodeHandler nodeHandler, void *data) {
+void List_ForEach(List_t list, NodeHandler nodeHandler, void *data) {
 	if(!list || !list->root || list->elementCount == 0 || !nodeHandler) {
 		return;
 	}
@@ -237,7 +237,7 @@ void List_ForEach(List list, NodeHandler nodeHandler, void *data) {
 	}
 }
 
-Node List_detachNode(List list, Node node) {
+Node List_detachNode(List_t list, Node node) {
 	if(!node || list->elementCount <= 0 ) {
 		return node;
 	}
@@ -268,18 +268,18 @@ Node List_detachNode(List list, Node node) {
 	return node;
 }
 
-Node List_detachNodeAtIndex(List list, int index) {
+Node List_detachNodeAtIndex(List_t list, int index) {
 	Node node = List_getNode(list, index);
 	return List_detachNode(list, node);
 }
 
-bool List_deleteNodeAtIndex(List list, int index) {
+bool List_deleteNodeAtIndex(List_t list, int index) {
 	Node node = List_getNode(list, index);
 	return List_deleteNode(list, node);
 }
 
 
-bool List_deleteNode(List list, Node node) {
+bool List_deleteNode(List_t list, Node node) {
 	node = List_detachNode(list, node);
 
 	if(NULL == node) {
@@ -292,7 +292,7 @@ bool List_deleteNode(List list, Node node) {
 }
 
 
-bool List_deleteAllNodes(List list) {
+bool List_deleteAllNodes(List_t list) {
 
 	bool removeNode(Node node, size_t index, void *data) {
 		return List_deleteNode(list, node);
@@ -304,12 +304,12 @@ bool List_deleteAllNodes(List list) {
 
 }
 
-int List_getSize(List list) {
+int List_getSize(List_t list) {
 	if(!list) return 0;
 	return list->elementCount;
 }
 
-Node List_findNode(List list, NodeHandler filter, void *filterCriteria) {
+Node List_findNode(List_t list, NodeHandler filter, void *filterCriteria) {
 	Node desiredNode = NULL;
 	
 	bool filterNode(Node node, size_t index, void *filterCriteria) {
@@ -325,14 +325,14 @@ Node List_findNode(List list, NodeHandler filter, void *filterCriteria) {
 	return desiredNode;
 }
 
-List List_findAllNodes(List list, NodeHandler filter, void *filterCriteria) {
+List_t List_findAllNodes(List_t list, NodeHandler filter, void *filterCriteria) {
 	/**
 	 * The filteredNodes list contains direct references (handles) to the nodes
 	 * of "list" hence a destroyHandler should not provided to the filteredNodes list.
 	 * Otherwise this could lead to a invalid state of the list, which means a node
 	 * of "list" could be accidentally deleted and this could lead to segmentation fault faulures.
 	 */
-	List filteredNodes = List_create(false, NULL);
+	List_t filteredNodes = List_create(false, NULL);
 	if(filteredNodes == NULL) {
 		return NULL;
 	}
@@ -349,7 +349,7 @@ List List_findAllNodes(List list, NodeHandler filter, void *filterCriteria) {
 	return filteredNodes;
 }
 
-void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder) {
+void List_sort(List_t list, NodeComperator nodeComperator, NodeSortOrder sortOrder) {
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
@@ -372,7 +372,7 @@ void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder
 	} while(countOfSwaps > 0);
 }
 
-void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder) {
+void List_mergeSort(List_t list, NodeComperator nodeComperator, NodeSortOrder sortOrder) {
 	if(!list || !list->root || list->elementCount <= 1 ) {
 		return;
 	}
@@ -389,10 +389,10 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 	 * @param[in] right A pointer to the right list.
 	 * @return A pointer to new allocated list which contains the nodes of left and right.
 	 */
-	List merge(struct List *left, struct List *right) {
+	List_t merge(struct List *left, struct List *right) {
 		Node node = NULL;
 
-		List newList = List_create(list->isDoupleLinkedList, list->destroyDataHandler);
+		List_t newList = List_create(list->isDoupleLinkedList, list->destroyDataHandler);
 		if(newList == NULL) {
 			perror("List mergSort: list creation failed");
 			return NULL;
@@ -431,7 +431,7 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 	 * @param[in] _list 	The list which should sorted.
 	 * @return	The sorted sub list.
 	 */
-	List sort(List _list) {
+	List_t sort(List_t _list) {
 		if(_list->elementCount <= 1 || _list == NULL) {
 			return _list;
 		}
@@ -461,9 +461,9 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 		// The end of the list splitting
 		
 
-		List lSorted = sort(&left);
-		List rSorted = sort(&right);
-		List result = merge(lSorted, rSorted);
+		List_t lSorted = sort(&left);
+		List_t rSorted = sort(&right);
+		List_t result = merge(lSorted, rSorted);
 		
 		// Ensures that only allocated memory is deallocated
 		if(lSorted != NULL && lSorted != &left) {
@@ -483,7 +483,7 @@ void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sort
 		return result;
 	}
 
-	List newList = sort(list);
+	List_t newList = sort(list);
 	if(newList != NULL) {
 		list->root = newList->root;
 		list->head = newList->head;

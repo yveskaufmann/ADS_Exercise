@@ -18,6 +18,12 @@
  * @date 12 Jun 2014
  */
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
+// rest of file
+
 #ifndef _LIST_H_
 #define _LIST_H_
 
@@ -37,7 +43,9 @@
  * type 'List' only as handle of aspecific list.
  *
  */
-typedef struct List* List;
+		
+
+typedef struct List* List_t;
 
 /**
  * A enumeration of directions in which a node could be inserted to a list.
@@ -81,7 +89,7 @@ typedef enum {
  *
  * @return 	The list handle to the successfully created list otherwise NULL.
  */
-List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler);
+List_t List_create(bool isDoupleLinkedList, NodeHandler destroyHandler);
 
 /**
  * Deallocate a specified list and destroies each node of this list.
@@ -91,7 +99,7 @@ List List_create(bool isDoupleLinkedList, NodeHandler destroyHandler);
  *
  * @param[in] list The specified list which should be destroyed.
  */
-void List_destroy(List list);
+void List_destroy(List_t list);
 
 
 /**
@@ -104,7 +112,7 @@ void List_destroy(List list);
  *
  * @return 	The handle of the successfully inserted node otherwise null.
  */
-Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirection dir);
+Node List_insertNodeAt(List_t list, Node newNode, Node position, NodeInsertDirection dir);
 
 /**
  * Appends the a new node to the end of the specified list.
@@ -114,7 +122,7 @@ Node List_insertNodeAt(List list, Node newNode, Node position, NodeInsertDirecti
  *
  * @return 	True, if the insert of the new node was successful.
  */
-bool List_addLast(List list, void *data);
+bool List_addLast(List_t list, void *data);
 
 /**
  * Inserts a new node at the beginning of the specified list.
@@ -124,7 +132,7 @@ bool List_addLast(List list, void *data);
  *
  * @return 	True, if the insert of the new node was successful.
  */
-bool List_addFirst(List list, void *data);
+bool List_addFirst(List_t list, void *data);
 
 /**
  * Returns the node from a specified list by his index.
@@ -136,7 +144,7 @@ bool List_addFirst(List list, void *data);
  * @return 	The handle of the desired node which is located at the specified index.
  * 			If the index is invalid NULL will be returned.
  */
-Node List_getNode(List list, int index);
+Node List_getNode(List_t list, int index);
 
 /**
  * A for each loop which iterates over each node in a specified list and calls
@@ -149,7 +157,7 @@ Node List_getNode(List list, int index);
  * @param[in] data 			A optional pointer which is passed to the nodeHandler in order
  * 							to parameterize the node handler.
  */
-void List_ForEach(List list, NodeHandler nodeHandler, void *data);
+void List_ForEach(List_t list, NodeHandler nodeHandler, void *data);
 
 /**
  * Removes a node from a specified list but doesn't deallocates the Node itself.
@@ -159,7 +167,7 @@ void List_ForEach(List list, NodeHandler nodeHandler, void *data);
  * @return	The handle of the successfully detached node or
  * 			NULL if the node doesn't exists in the specified list.
  */
-Node List_detachNode(List list, Node node);
+Node List_detachNode(List_t list, Node node);
 
 /**
  * Removes the node at position 'index' from a specified list but doesn't deallocates the Node itself.
@@ -170,7 +178,7 @@ Node List_detachNode(List list, Node node);
  * @return	The handle of the successfully detached node or
  * 			NULL if the node doesn't exists in the specified list.
  */
-Node List_detachNodeAtIndex(List list, int index);
+Node List_detachNodeAtIndex(List_t list, int index);
 
 
 /**
@@ -180,7 +188,7 @@ Node List_detachNodeAtIndex(List list, int index);
  * @param[in] node	The node which should detached from the specified list and should be deallocated.
  * @return	True if the node was successfully detached and deallocated.
  */
-bool List_deleteNode(List list, Node node);
+bool List_deleteNode(List_t list, Node node);
 
 /**
  * Removes the node at position 'index' from a specified list and deallocates the Node itself.
@@ -190,7 +198,7 @@ bool List_deleteNode(List list, Node node);
  * @param[in] index	The sequence number/position of the desired node which should be removed from the list.
  * @return  True if the node was successfully detached and deallocated.
  */
-bool List_deleteNodeAtIndex(List list, int index);
+bool List_deleteNodeAtIndex(List_t list, int index);
 
 /**
  * Deletes all nodes from a specified list and deallocates each detached node.
@@ -199,7 +207,7 @@ bool List_deleteNodeAtIndex(List list, int index);
  *
  * @return	True if the deletion of each node was successful.
  */
-bool List_deleteAllNodes(List list);
+bool List_deleteAllNodes(List_t list);
 
 /**
  * Returns the count of nodes in the specified list.
@@ -207,7 +215,7 @@ bool List_deleteAllNodes(List list);
  * @param[in] list 	The specified list for which the size should be determined.
  * @return	The size, the count of nodes in the specified list.
  */
-int List_getSize(List list);
+int List_getSize(List_t list);
 
 /**
  * Searches for a single node in a specified list by using a NodeHandler
@@ -227,7 +235,7 @@ int List_getSize(List list);
  * 					to parameterize the filter.
  * @return The handle to the desired node if the desired node was otherwise NULL.
  */
-Node List_findNode(List list, NodeHandler filter, void *data);
+Node List_findNode(List_t list, NodeHandler filter, void *data);
 
 /**
  * Searches for a set of nodes in a specified list by using a NodeHandler
@@ -250,7 +258,7 @@ Node List_findNode(List list, NodeHandler filter, void *data);
  * @return 	The handle to the list which containe the filtered/ founded nodes.
  * 		   	If theire was an error NULL will be returned.
  */
-List List_findAllNodes(List list, NodeHandler filter, void *data);
+List_t List_findAllNodes(List_t list, NodeHandler filter, void *data);
 
 /**
  * Sorts a specified list with the bubble sort algorithm by using
@@ -265,7 +273,7 @@ List List_findAllNodes(List list, NodeHandler filter, void *data);
  * @param[in] nodeComperator	The comparator function which should be used for order determination of the nodes.
  * @param[in] sortOrder			The sort order in which the list should be sorted.
  */
-void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
+void List_sort(List_t list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
 
 /**
  * Sorts a specified list with the merge sort algorithm by using
@@ -279,6 +287,9 @@ void List_sort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder
  * @param[in] nodeComperator	The comparator function which should be used for order determination of the nodes.
  * @param[in] sortOrder			The sort order in which the list should be sorted. (ascending|descending)
  */
-void List_mergeSort(List list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
+void List_mergeSort(List_t list, NodeComperator nodeComperator, NodeSortOrder sortOrder);
 
 #endif /* LIST_H_ */
+#ifdef __cplusplus
+}
+#endif

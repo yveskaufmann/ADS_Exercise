@@ -232,7 +232,7 @@ void Student_print(Student student);
  *
  * @param[in] students	The list of students whichshould be printed on to the stdout.
  */
-void Student_printAll(List students);
+void Student_printAll(List_t students);
 
 /**
  * Searches any studens in a specified list by his first name.
@@ -246,7 +246,7 @@ void Student_printAll(List students);
  *
  * @return	A list of students which first names matches \a name.
  */
-List Student_findAllByFirstName(List list, const char* name);
+List_t Student_findAllByFirstName(List_t list, const char* name);
 
 /**
  * Searches any studens in a specified list by his sure name.
@@ -260,7 +260,7 @@ List Student_findAllByFirstName(List list, const char* name);
  *
  * @return	A list of students which sure names matches \a name.
  */
-List Student_findAllBySureName(List list, const char* name);
+List_t Student_findAllBySureName(List_t list, const char* name);
 
 /**
  * Searches any studens in a specified list by his course of studies.
@@ -274,7 +274,7 @@ List Student_findAllBySureName(List list, const char* name);
  *
  * @return	A list of students which course names matches \a name.
  */
-List Student_findAllByCourseName(List list, const char* name);
+List_t Student_findAllByCourseName(List_t list, const char* name);
 
 /**
  * Searches any studens in a specified list by his matriculation number.
@@ -288,6 +288,6 @@ List Student_findAllByCourseName(List list, const char* name);
  * @param matriculationNumber	The filter criteria for the matriculationNumber.
  * @return	A list of students which matriculation number matches \a matriculationNumber.
  */
-List Student_findAllByMatriculationNumber(List list,int matriculationNumber);
+List_t Student_findAllByMatriculationNumber(List_t list,int matriculationNumber);
 
 #endif /* _STUDENT_H_ */

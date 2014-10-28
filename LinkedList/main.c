@@ -2,7 +2,7 @@
  * This file contains a simple console application
  * which demonstrates the usage of the list data structure.
  *
- * In this example the List stores some students and the application
+ * In this example the List_t stores some students and the application
  * provides following options:
  *
  *	- create new students and inserts the into the list
@@ -50,7 +50,7 @@
  * @return the new created list with sample students.
  */
 static
-List createsSampleStudentList();
+List_t createsSampleStudentList();
 
 /**
  * Call the menu for creation and inserting of
@@ -59,7 +59,7 @@ List createsSampleStudentList();
  * @param[in] list The list which should obtain the new student.
  */
 static
-void addStudent(List list);
+void addStudent(List_t list);
 
 /**
  * Call the menu for deletion of student
@@ -68,7 +68,7 @@ void addStudent(List list);
  * @param[in] list The list which contains the to be remove student.
  */
 static
-void removeStudent(List list);
+void removeStudent(List_t list);
 
 /**
  * Call the menu for filtering of students
@@ -77,7 +77,7 @@ void removeStudent(List list);
  * @param[in] list The list which contains the students which should be filtered.
  */
 static
-void filterStudent(List list);
+void filterStudent(List_t list);
 
 /**
  * The main entry point of the demonstatron application.
@@ -88,11 +88,11 @@ void filterStudent(List list);
  */
 int main(int argc, char **argv) {
 	char cmd = '?';
-	List students = createsSampleStudentList();
+	List_t students = createsSampleStudentList();
 	for(;;) {
 		switch(cmd) {
 			case MAIN_CMD:
-				printf("\t\tLinked List Example: Students\n");
+				printf("\t\tLinked List_t Example: Students\n");
 				printf("\t\t=============================\n");
 				printf("\n");
 				printf("\t%c - %s\n", ADD_CMD, "Adds a new student to the student list.");
@@ -155,8 +155,8 @@ int main(int argc, char **argv) {
 }
 
 static
-List createsSampleStudentList() {
-	List list = List_create(true, Student_DestroyHandler);
+List_t createsSampleStudentList() {
+	List_t list = List_create(true, Student_DestroyHandler);
 	List_addFirst(list,Student_create("Yves", "Kaufmann", "AS", 544361));
 	List_addFirst(list,Student_create("Student", "A", "BWL", 1324243));
 	List_addFirst(list,Student_create("Student", "B", "Math", 564631));
@@ -174,7 +174,7 @@ List createsSampleStudentList() {
 }
 
 static
-void addStudent(List list) {
+void addStudent(List_t list) {
 	char firstname[255];
 	char surename[255];
 	char coursename[255];
@@ -206,10 +206,10 @@ void addStudent(List list) {
 }
 
 static
-void removeStudent(List list) {
+void removeStudent(List_t list) {
 	int countOfStudents = List_getSize(list);
 	if(countOfStudents == 0) {
-		printf("The List of students is empty.");
+		printf("The List_t of students is empty.");
 		return;
 	}
 	int studentIndex = readInteger("Index of the student which should be removed", 0, countOfStudents - 1);
@@ -217,11 +217,11 @@ void removeStudent(List list) {
 }
 
 static
-void filterStudent(List list) {
+void filterStudent(List_t list) {
 	char desiredFilterProperty = 0;
 	char filterText[255];
 	int matriculationFilter = 0;
-	List filteredStudents = NULL;
+	List_t filteredStudents = NULL;
 
 	printf("%c - %s\n", FIRSTNAME_STUDENTS_PROPERTY, "Filters by the firstname.");
 	printf("%c - %s\n", SURENAME_STUDENTS_PROPERTY, "Filters by the lastname.");

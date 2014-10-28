@@ -24,7 +24,7 @@ TESTARGUMENTS=
 
 all:	clean $(TARGET) $(STATIC_LIB)
 
-.PHONY:	clean all
+.PHONY:	clean all $(STATIC_LIB)
 clean:
 	rm -f $(TARGET) $(OBJECTS) $(STATIC_LIB)  main.o
 	rm -rf doc 

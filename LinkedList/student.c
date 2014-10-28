@@ -272,7 +272,7 @@ void Student_print(Student student) {
 
 }
 
-void Student_printAll(List studentList) {
+void Student_printAll(List_t studentList) {
 	if(!studentList) return;
 	printf("Count of students: %d\n", List_getSize(studentList));
 	printf("%-15s %-15s  %-20s  %-12s\n","First-Name", "Sure-Name", "Course-Name", "Matriculation-Number");
@@ -284,7 +284,7 @@ void Student_printAll(List studentList) {
 // DATA STRACTURE find
 //----------------------------------------------------------------------------
 
-List Student_findAllByFirstName(List list, const char* firstName) {
+List_t Student_findAllByFirstName(List_t list, const char* firstName) {
 	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		return testIfStringMatches(data,Student_getFirstName(student));
@@ -292,7 +292,7 @@ List Student_findAllByFirstName(List list, const char* firstName) {
 	return List_findAllNodes(list, filterNodes, (void *)firstName);
 }
 
-List Student_findAllBySureName(List list, const char* sureName) {
+List_t Student_findAllBySureName(List_t list, const char* sureName) {
 	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		return testIfStringMatches(data,Student_getSureName(student));
@@ -300,7 +300,7 @@ List Student_findAllBySureName(List list, const char* sureName) {
 	return List_findAllNodes(list, filterNodes, (void *)sureName);
 }
 
-List Student_findAllByCourseName(List list, const char* courseName) {
+List_t Student_findAllByCourseName(List_t list, const char* courseName) {
 	bool filterNodes(Node node, size_t index, void *data) {
 		Student student = Node_getData(node);
 		return testIfStringMatches(data,Student_getCourseName(student));
@@ -308,7 +308,7 @@ List Student_findAllByCourseName(List list, const char* courseName) {
 	return List_findAllNodes(list, filterNodes, (void *)courseName);
 }
 
-List Student_findAllByMatriculationNumber(List list,int matriculationNumber) {
+List_t Student_findAllByMatriculationNumber(List_t list,int matriculationNumber) {
 
 	int countOfDigitsOfDesiredMtr = log(matriculationNumber) / log(10);
 
